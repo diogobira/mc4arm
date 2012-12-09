@@ -1,0 +1,54 @@
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>Arquivo de configuração
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+1) parametros.yml
+	Arquivo onde são definidos os parâmetros de simulação. Está divido em seções de acordo com o tipo de 
+	parâmetro (geral, previdencia, patrocinador, financeiro)
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>Classes
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+1) parametros.rb
+	Classe na qual são carregados os valores dos parâmetros definidos no arquivo de configuração. De acordo com
+	o tipo de parâmetro, o método de inicialiação desta classe dá um tratamento diferente ao parâmetro. A classe
+	também contém atributos para guardar "parâmetros estruturados", como a lista de pessoas, as tabuas de mortalidade
+	etc. No arquivo de configuração, a única informação que temos sobre estes parâmetros são os nomes dos arquivos
+	onde os dados estão de fato.
+
+2) plano_previdencia.rb
+	Classe que implementa os métodos relacionados a previdência, como aposentadoria, morte, invalidez etc. Os métodos
+	desta classe ora trabalham sobre um objeto da classe participante, ora sobre a lista completa de participantes.
+	Ao operar sobre objetos de outras classes ou tipos, a orientação a objetos é ferida em parte. Porém, esta abordagem
+	será mais performática e provê uma maior facilidade de entendimento do fluxo de simulação.
+
+3) patrocinador.rb
+	Classe que implementa métodos relacionados ao patrocionador, como promoções, tempos de serviço, contratações. 
+	Assim como no caso da classe plano_previdencia.rb, os métodos desta classe operam basicamente sobre objetos do
+	tipo participante e sobre a lista de participantes.
+
+4) simulador.rb
+	Classe que implementa o fluxo principal do processo de simulação. Tal classe é instanciada recebendo como parâmetro
+	um objeto da classe Parametro. O principal método da classe é o que executa rodadas de simulação para todas as 
+	combinações de valores de variáveis, e retorna um array com fluxos de caixa e os parâmetros correspondentes.
+
+5) dispatcher.rb
+	Classe que dispara as simulações na quantidade e modo informados. Os modos podem ser "Threads", "IronIO" etc.
+
+		
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>Módulos
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+1) probability.rb
+	Neste módulo são implementadas basicamente funções de sorteio de variáveis aleatórias para diversas distribuições
+	de probabibilidade. 
+
+2) loader.rb
+	Neste módulo são implementados métodos para carga de atributos estruturados a partir de arquivos de configuração
+	cujos nomes são informados no arquivo de parâmetros da simulação.
+
+	
+
+
