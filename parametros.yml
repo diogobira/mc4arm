@@ -1,0 +1,54 @@
+#####################################
+#Parametros gerais
+#####################################
+
+geral:
+	geral_horizonte: 100
+	geral_arquivo_pessoas: pessoas.csv
+
+#####################################
+#Parametros previdenciários	
+#####################################
+
+previdencia:
+	previdencia_caixa_inicial: SimpleList;Number;1000000
+	previdencia_prc_contribuicao: SimpleList;Number;5,6,7,8
+	previdencia_prc_joia: SimpleList;Number;1,2,3
+	previdencia_qtd_contribuicoes_ano: SimpleList;Number;13,14,15
+	previdencia_qtd_pagamentos_ano: SimpleList;Number;13,13,14
+	previdencia_tx_adm_ativos: SimpleList;Number;8,9,10
+	previdencia_tx_adm_aposentados: SimpleList;Number;5,6,7
+	previdencia_nivel_nu_teto: SimpleList;Number;17
+	previdencia_nivel_nm_teto: SimpleList;Number;10
+	previdencia_contribuicao_patrocinador: SimpleList;Number;1	
+	previdencia_inss_teto_aposentadoria: SimpleList;Number;3400
+	previdencia_inss_idade_aposentadoria_homem: SimpleList;Number;60
+	previdencia_idade_aposentadoria_mulher: SimpleList;Number;55
+	previdencia_tabua_mortalidade: SimpleList;String;m100,m101,m102
+	previdencia_tabua_invalidez: SimpleList;String;i100,i101,i102
+
+#####################################
+#Parâmetros do patrocinador
+#####################################
+
+patrocinador:
+	patrocinador_tabela_salarial: SimpleList;String;salarios
+	patrocinador_tabela_ats: SimpleList;String;ats		
+	patrocinador_tabela_adicionais_funcao: SimpleList;String;funcoes
+	patrocinador_prc_promovidos_ano: SimpleList;Number;30,35,40
+	patrocinador_prc_cargos_coordenador: SimpleList;Number;5
+	patrocinador_prc_cargos_gerente: SimpleList;Number;20
+	patrocinador_prc_cargos_chefe: SimpleList;Number;5
+	patrocinador_prc_cargos_sup: SimpleList;Number;1
+	patrocinador_variacao_quadro: RandomList;Number;100 Uniform 0 1
+	patrocinador_idade_entrantes: RandomList;Number;100 Normal 32 4
+	patrocinador_sexo_entrantes: RandomList;Number;100 Bernoulli 0.5
+	patrocinador_tempo_servico_entrantes: RandomList;Number;100 Normal 10 5
+
+#####################################
+#Parametros financeiros
+#####################################
+
+financeiro:
+	financeiro_taxa_desconto: SimpleList;Number;5 
+
