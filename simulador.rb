@@ -15,17 +15,18 @@ class Simulador
 		cashFlow = Array.new
 
 		#Loop em todas as combinações de parâmetros	
-		@p.combinacoes_valores.each do |c|
+		@p.combinacoes.comprehend do |c|
+
+			#Hash com parametros do loop corrente	
+			h = Hash.new
+			c.each {|p| h.merge!(p)}
 
 			#Variáveis de acumulação
 			receitas,despesas = 0,0
 
-			#Hash com parametros do loop corrente	
-			h_parametros = Hash[*@p.combinacoes_simbolos.zip(c).flatten]
-
 			#Instância objetos de acordo com parametros do loop corrente
-			patrocinador = Patrocinador.new(h_parametros)
-			plano = PlanoPrevidencia.new(h_parametros)
+			patrocinador = Patrocinador.new(h)
+			plano = PlanoPrevidencia.new(h)
 
 			#Loop ao longo de todo horizonte de simulação
 			(0...@p.geral_horizonte).each do |i|
@@ -43,7 +44,7 @@ class Simulador
 				fluxo_ano_corrente = {:ano => @anosimulacao, :receitas => receitas,:despesas => despesas}
 
 				#Atualiza o array cashFlow 
-				cashFlow << fluxo_ano_corrente.merge(h_parametros)
+				cashFlow << fluxo_ano_corrente.merge(h)
 
 				#Processos de atualização da lista de participantes
 				participantes = patrocinador.processa_promocao_anual(participantes)

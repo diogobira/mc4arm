@@ -23,22 +23,33 @@ class PlanoPrevidencia
 		return beneficio
 	end
 
-	def processa_invalidez(participantes)
-		return participantes
-	end
-
+	#Roda processo de atualização de idades
 	def processa_idade(participantes)
+		participantes.map! do |p| 	
+			p.idade = p.idade + 1
+			p.dependentes.map! do |d|
+				d.idade = d.idade + 1
+			end
+		end
 		return participantes
 	end
 
+	#Roda processo de aposentadoria
 	def processa_aposentadoria(participantes)
 		return participantes
 	end
 
+	#Roda processo de mortalidade
 	def processa_morte(participantes)
 		return participantes
 	end
 
+	#Roda processo de invalidez
+	def processa_invalidez(participantes)
+		return participantes
+	end
+
+	#Roda processo de atualização de dependentes
 	def processa_dependente(participantes)
 		return participantes
 	end
