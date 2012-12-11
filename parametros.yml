@@ -35,6 +35,7 @@ patrocinador:
  patrocinador_tabela_salarial: SimpleList;String;data/tabela_salarial.csv
  patrocinador_tabela_ats: SimpleList;String;ats		
  patrocinador_tabela_funcoes: SimpleList;String;funcoes
+ patrocinador_gratificacao: SimpleList;Number;0.25
  patrocinador_prc_promovidos_ano: SimpleList;Number;30,35,40
  patrocinador_variacao_quadro: Distribution;Number;Uniform 0 1
  patrocinador_idade_entrantes: Distribution;Number;Normal 32 4
