@@ -26,6 +26,7 @@ class Parametros
 		secoes = ["geral","previdencia","patrocinador","financeiro"]
 
 		secoes.each do |secao|
+
 			config[secao].each do |key, config_value|
 
 				#Separa valor do parametro em partes

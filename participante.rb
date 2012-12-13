@@ -4,14 +4,16 @@ class Participante
 	attr_accessor :matricula
 	attr_accessor :sexo
 	attr_accessor :nascimento
-	attr_accessor :datactps
-	attr_accessor :quadro
+	attr_accessor :quadro 
+	attr_accessor :nivel
 	attr_accessor :classe
 	attr_accessor :ats	
 	attr_accessor :cargo
 	attr_accessor :admissao
-	attr_accessor :funcaoc
-	attr_accessor :funcaom
+	attr_accessor :tempo_empresa
+	attr_accessor :funcao_ativa
+	attr_accessor :funcao_incorporada
+	attr_accessor :funcao_incorporada_prc
 	attr_accessor :status
 	attr_accessor :idade
 	attr_accessor :salario

@@ -6,13 +6,16 @@ class PlanoPrevidencia
 		h.each_pair {|k,v| instance_variable_set("@#{key}",v)} 			
 
 		#Atributos estruturados
+		@tabela_salarial = load_tabela_salarial(@patrocinador_tabela_salarial)
+		@tabela_ats = load_tabela_ats(@patrocinador_tabela_ats)
+		@tabela_funcoes = load_tabela_funcoes(@patrocinador_tabela_funcoes)
 		@tabua_mortalidade = load_tabua_mortalidade(@previdencia_tabua_mortalidade)
 		@tabua_invalidez = load_tabua_invalidez(@previdencia_tabua_invalidez)
 
 	end
 
 	####################################################################
-	#Métodos de apoio a simulação
+	#Cálculos de contribuições e benefícios
 	####################################################################
 
 	def contribuicao_anual(participante)
@@ -20,8 +23,13 @@ class PlanoPrevidencia
 	end
 
 	def beneficio_anual(participante)
+		p = participante
 		return beneficio
 	end
+
+	####################################################################
+	#Processos relacionados a previdência
+	####################################################################
 
 	#Roda processo de atualização de idades
 	def processa_idade(participantes)

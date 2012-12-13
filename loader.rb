@@ -27,27 +27,25 @@ module Loader
 	####################################################################
 	def load_tabela_salarios(arquivo)
 		tabela_salarios = csv2hashes(arquivo)
-		return tabela_salarios
 	end
 
 	def load_tabela_ats(arquivo)
 		tabela_ats = csv2hashes(arquivo)
-		return tabela_ats
 	end
 
 	def load_tabela_funcoes(arquivo)
 		tabela_funcoes = csv2hashes(arquivo)
-		return tabela_funcoes
 	end	
 
 	####################################################################
 	#Carga de parâmetros estruturados - Plano de Previdência
 	####################################################################
-
 	def load_tabua_mortalidade(arquivo)
+		tabua_mortalidade = csv2hashes(arquivo)
 	end
 
 	def load_tabua_invalidez(arquivo)
+		tabua_invalidez(arquivo)
 	end
 
 end

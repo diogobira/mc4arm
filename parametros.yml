@@ -33,13 +33,13 @@ previdencia:
 
 patrocinador:
  patrocinador_tabela_salarial: SimpleList;String;data/tabela_salarial.csv
- patrocinador_tabela_ats: SimpleList;String;ats		
- patrocinador_tabela_funcoes: SimpleList;String;funcoes
+ patrocinador_tabela_ats: SimpleList;String;data/tabela_ats.csv
+ patrocinador_tabela_funcoes: SimpleList;String;data/tabela_funcoes.csv
  patrocinador_gratificacao: SimpleList;Number;0.25
  patrocinador_prc_promovidos_ano: SimpleList;Number;30,35,40
  patrocinador_variacao_quadro: Distribution;Number;Uniform 0 1
  patrocinador_idade_entrantes: Distribution;Number;Normal 32 4
- patrocinador_sexo_entrantes: Distribution;Number;Bernoulli 0.5
+ patrocinador_prc_homens_entrantes: Distribution;Number;Bernoulli 0.5
  patrocinador_tempo_servico_entrantes: Distribution;Number;Normal 10 5
 
 #####################################
