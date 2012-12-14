@@ -4,9 +4,11 @@ class Participante
 	attr_accessor :matricula
 	attr_accessor :sexo
 	attr_accessor :nascimento
+	attr_accessor :vivo
 	attr_accessor :quadro 
 	attr_accessor :nivel
 	attr_accessor :classe
+	attr_accessor :topado
 	attr_accessor :ats	
 	attr_accessor :cargo
 	attr_accessor :admissao

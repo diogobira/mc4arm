@@ -23,29 +23,15 @@ module Loader
 	end
 
 	####################################################################
-	#Carga de parâmetros estruturados - Patrocinador
+	#Carga de parâmetros estruturados
 	####################################################################
-	def load_tabela_salarios(arquivo)
-		tabela_salarios = csv2hashes(arquivo)
+	def load_tabela(arquivo)
+		tabela = csv2hashes(arquivo)
 	end
 
-	def load_tabela_ats(arquivo)
-		tabela_ats = csv2hashes(arquivo)
+	def load_tabua(arquivo)
+		tabua = csv2hashes(arquivo)
 	end
 
-	def load_tabela_funcoes(arquivo)
-		tabela_funcoes = csv2hashes(arquivo)
-	end	
-
-	####################################################################
-	#Carga de parâmetros estruturados - Plano de Previdência
-	####################################################################
-	def load_tabua_mortalidade(arquivo)
-		tabua_mortalidade = csv2hashes(arquivo)
-	end
-
-	def load_tabua_invalidez(arquivo)
-		tabua_invalidez(arquivo)
-	end
 
 end

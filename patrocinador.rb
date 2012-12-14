@@ -12,9 +12,13 @@ class Patrocinador
 		h.each_pair {|k,v| instance_variable_set("@#{key}",v)} 			
 
 		#Atributos estruturados
-		@tabela_salarial = load_tabela_salarial(@patrocinador_tabela_salarial)
-		@tabela_ats = load_tabela_ats(@patrocinador_tabela_ats)
-		@tabela_funcoes = load_tabela_funcoes(@patrocinador_tabela_funcoes)
+		@tabela_salarial = load_tabela(@patrocinador_tabela_salarial)
+		@tabela_ats = load_tabela(@patrocinador_tabela_ats)
+		@tabela_funcoes = load_tabela(@patrocinador_tabela_funcoes)
+
+		#Topos das tabelas
+		@topo_nm = @tabela_salarial.select{|s| s[:nivel]="Medio"}.collect{|s| s[:classe]}.max
+		@topo_nu = @tabela_salarial.select{|s| s[:nivel]="Superior"}.collect{|s| s[:classe]}.max
 
 	end
 
@@ -31,9 +35,9 @@ class Patrocinador
 	#Roda processo de promoção anual
 	def processa_promocao_anual(participantes)
 
-		#Posição dos profissionais ativos por nível no vetor de participantes	
-		participantes_nm_indexes = participantes_index({:status=>"Ativo",:nivel=>"Medio"})
-		participantes_nu_indexes = participantes_index({:status=>"Ativo",:nivel=>"Superior"})
+		#Candidatos a promoção
+		participantes_nm_indexes = participantes_index({:status=>"Ativo",:nivel=>"Medio",:topado=>false})
+		participantes_nu_indexes = participantes_index({:status=>"Ativo",:nivel=>"Superior",:topado=>false})
 
 		#Totais de ativos por nível
 		total_nm = participantes_nm_indexes.length
@@ -47,9 +51,15 @@ class Patrocinador
 		qtd_promovidos_nm = (total_nm * @patrocinador_prc_promovidos_ano).ceil
 		qtd_promovidos_nu = (total_nu * @patrocinador_prc_promovidos_ano).ceil
 
-		#Altera os níveis
-		participantes_nm_indexes[0,qtd_promovidos_nm].each {|i| participantes[i].classe+=1}
-		participantes_nu_indexes[0,qtd_promovidos_nu].each {|i| participantes[i].classe+=1}
+		#Altera as classes e, caso necessário, o status de topado
+		participantes_nm_indexes[0,qtd_promovidos_nm].each do |i| 
+			participantes[i].classe+=1
+			participantes[i].topado = true if participantes[i].classe == @topo_nm
+		end
+		participantes_nu_indexes[0,qtd_promovidos_nu].each do |i| 
+			participantes[i].classe+=1
+			participantes[i].topado = true if participantes[i].classe == @topo_nu
+		end
 
 		return participantes
 
@@ -63,8 +73,8 @@ class Patrocinador
 			if p.status == "Ativo"
 
 				#Salário base e Ats
-				salario_base = @tabela_salarial.detect {|s| s[:quadro] == participante.quadro and s[:classe] == participante.nivel}
-				ats = @tabela_ats.detect {|a| s[:quadro] == participante.nivel and s[:tempo_empresa] == participante.nivel}
+				salario_base = @tabela_salarial.detect {|s| s[:quadro] == participante.quadro and s[:classe] == participante.classe}
+				ats = @tabela_ats.detect {|a| s[:quadro] == participante.quadro and s[:tempo_empresa] == participante.tempo_empresa}
 
 				#Adicional de função
 				if !(p.funcao_ativa.nil?) 
@@ -95,10 +105,6 @@ class Patrocinador
 		total_nm = participantes_nm_indexes.length
 		total_nu = participantes_nu_indexes.length
 
-		#Totais de vagas de função disponíveis e ocupadas
-		totais_vagas = Array.new			
-		totais_vagas_ocupadas = Array.new
-			
 		#Loop em cada função
 		@tabela_funcoes.each do |f|
 

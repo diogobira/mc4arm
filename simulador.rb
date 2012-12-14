@@ -50,7 +50,6 @@ class Simulador
 					receitas = receitas + plano.contribuicao_anual(p)
 					despesas = despesas + plano.beneficio_anual(p)
 				end
-				
 
 				#Atualiza o array cashFlow
 				fluxo_ano_corrente = {:ano => @anosimulacao, :receitas => receitas,:despesas => despesas}
