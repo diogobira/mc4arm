@@ -16,10 +16,6 @@ class Patrocinador
 		@tabela_ats = load_tabela(@patrocinador_tabela_ats)
 		@tabela_funcoes = load_tabela(@patrocinador_tabela_funcoes)
 
-		#Topos das tabelas
-		@topo_nm = @tabela_salarial.select{|s| s[:nivel]="Medio"}.collect{|s| s[:classe]}.max
-		@topo_nu = @tabela_salarial.select{|s| s[:nivel]="Superior"}.collect{|s| s[:classe]}.max
-
 	end
 
 	####################################################################
@@ -28,7 +24,7 @@ class Patrocinador
 
 	#Roda processo de atualização de tempo de empresa para ativos
 	def processa_tempo_empresa(participantes)
-		participantes.map! {|p| p.status == "Ativo" ? p.tempo_empresa+=1 :	p.tempo_empresa}
+		participantes.map! {|p| p.status == "Ativo" ? p.tempo_empresa+=1 : p.tempo_empresa=p.tempo_empresa}
 		return participantes
 	end
 
@@ -54,11 +50,11 @@ class Patrocinador
 		#Altera as classes e, caso necessário, o status de topado
 		participantes_nm_indexes[0,qtd_promovidos_nm].each do |i| 
 			participantes[i].classe+=1
-			participantes[i].topado = true if participantes[i].classe == @topo_nm
+			participantes[i].topado = true if topo_carreira(participantes[i]) == participantes[i].classe
 		end
 		participantes_nu_indexes[0,qtd_promovidos_nu].each do |i| 
 			participantes[i].classe+=1
-			participantes[i].topado = true if participantes[i].classe == @topo_nu
+			participantes[i].topado = true if topo_carreira(participantes[i]) == participantes[i].classe
 		end
 
 		return participantes
@@ -67,31 +63,15 @@ class Patrocinador
 
 	#Roda processo de atualização de salários
 	def processa_salarios(participantes)
-
 		participantes.map! do |p|
-
 			if p.status == "Ativo"
-
-				#Salário base e Ats
-				salario_base = @tabela_salarial.detect {|s| s[:quadro] == participante.quadro and s[:classe] == participante.classe}
-				ats = @tabela_ats.detect {|a| s[:quadro] == participante.quadro and s[:tempo_empresa] == participante.tempo_empresa}
-
-				#Adicional de função
-				if !(p.funcao_ativa.nil?) 
-					adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == participante.funcao_ativa}
-				elsif !(p.funcao_incorporada.nil?) 
-					adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == participante.funcao_incorporada}
-					adicional_funcao = adicional_funcao * participante.funcao_incorporada_prc
-				end
-
-				#Atualiza o salário
+				salario_base = salario_base(p)
+				ats = ats(p)
+				adicional_funcao = adicional_funcao(p)
 				p.salario = (salario_base + salario_base * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
-
 			end
 		end
-
 		return participantes
-
 	end
 
 	#Roda processo de atualização dos ocupantes de funções comissionadas
@@ -161,6 +141,41 @@ class Patrocinador
 	end
 
 	####################################################################
+	#Métodos de pesquisa nas tabelas
+	####################################################################
+
+	#Retorna o topo da carreira na qual um determinado participante está enquadrado
+	def topo_carreira(p)
+		t = @tabela_salarial.detect {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel}
+		return t[:classe]
+	end
+
+	#Retorna o salário base do participante
+	def salario_base(p)
+			s = @tabela_salarial.detect {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel and s[:classe] == p.classe}
+			return s[:salario_base]			
+	end
+
+	#Retorna o adicional por tempo de serviço do participante
+	def ats(p)
+		a = @tabela_ats.detect {|a| s[:quadro] == p.quadro and s[:tempo_empresa] == p.tempo_empresa}
+		return a[:ats]
+	end
+
+	#Retorna o adicional de função do participante
+	def adicional_funcao(p)
+		if !(p.funcao_ativa.nil?) 
+			adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_ativa}
+		elsif !(p.funcao_incorporada.nil?) 
+			adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_incorporada}
+			adicional_funcao = adicional_funcao * p.funcao_incorporada_prc
+		else
+			adicional_funcao = 0
+		end
+		return adicional_funcao
+	end
+
+	####################################################################
 	#Métodos auxiliares
 	####################################################################
 	
@@ -183,5 +198,6 @@ class Patrocinador
 		indexes = participantes_index_complementar(participantes,h)
 		return all_indexes - indexes
 	end
+
 
 end

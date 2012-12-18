@@ -119,8 +119,7 @@ class PlanoPrevidencia
 	end
 
 	def fator_joia(h)
-		#fator = 
-		return fator
+		#return fator
 	end
 
 	#Sorteia a morte de um determinado participante de acordo com a tábua de mortalidade

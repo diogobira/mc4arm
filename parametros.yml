@@ -13,7 +13,9 @@ geral:
 previdencia:
  previdencia_caixa_inicial: SimpleList;Number;1000000
  previdencia_tabela_contribuicao: SimpleList;String;data/tabela_contribuicao.csv
+ previdencia_tabela_contribuicao_aposentados: SimpleList;String;data/tabela_contribuicao_aposentados.csv
  previdencia_tabela_joia: SimpleList;String;data/tabela_joia.csv
+ previdencia_tabela_fator_pensao: SimpleList;String;data/tabela_fator_pensao.csv
  previdencia_qtd_contribuicoes_ano: SimpleList;Number;13,14,15
  previdencia_qtd_pagamentos_ano: SimpleList;Number;13,13,14
  previdencia_tx_adm_ativos: SimpleList;Number;8,9,10
