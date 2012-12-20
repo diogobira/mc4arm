@@ -5,33 +5,23 @@ class PlanoPrevidencia
 		#Atributos simples
 		h.each_pair {|k,v| instance_variable_set("@#{key}",v)} 			
 
+		#Tabelas e Tábuas
+		@t = Tabelas.new(h)		
+
 		#Atributos estruturados
-		@tabela_salarial = load_tabela(@patrocinador_tabela_salarial)
-		@tabela_ats = load_tabela(@patrocinador_tabela_ats)
-		@tabela_contribuicao = load_tabela(@previdencia_tabela_contribuicao)
-		@tabela_joia = load_tabela(@previdencia_tabela_joia)
-		@tabela_funcoes = load_tabela(@patrocinador_tabela_funcoes)
-		@tabua_mortalidade = load_tabua(@previdencia_tabua_mortalidade)
-		@tabua_invalidez = load_tabua(@previdencia_tabua_invalidez)
+		@tabela_salarial = @t.tabela_salarial
+		@tabela_ats = @t.tabela_ats
+		@tabela_contribuicao = @t.tabela_contribuicao
+		@tabela_joia = @t.tabela_joia
+		@tabela_funcoes = @t.tabela_funcoes
+		@tabua_mortalidade = @t.tabua_mortalidade
+		@tabua_invalidez = @t.tabua_invalidez
 
 	end
 
 	####################################################################
 	#Cálculos de contribuições e benefícios
 	####################################################################
-
-=begin
- previdencia_tabela_contribuicao: SimpleList;String;data/tabela_contribuicao.csv
- previdencia_tabela_joia: SimpleList;String;data/tabela_joia.csv
- previdencia_qtd_contribuicoes_ano: SimpleList;Number;13,14,15
- previdencia_qtd_pagamentos_ano: SimpleList;Number;13,13,14
- previdencia_tx_adm_ativos: SimpleList;Number;8,9,10
- previdencia_tx_adm_aposentados: SimpleList;Number;5,6,7
- previdencia_nivel_nu_teto: SimpleList;Number;17
- previdencia_nivel_nm_teto: SimpleList;Number;10
- previdencia_contribuicao_patrocinador: SimpleList;Number;1	
- previdencia_inss_teto_aposentadoria: SimpleList;Number;3400
-=end
 
 	def contribuicao_anual(participante)
 		p = participante
@@ -72,21 +62,27 @@ class PlanoPrevidencia
 
 	#Roda processo de mortalidade
 	def processa_morte(participantes)
-
 		participantes.each do |p|
-			if p.vivo?
-				if matou(p)
+			if p.vivo
+				if morreu(p)
 					p.vivo = false
 					p.status = "Desligado"
 				end
 			end
 		end
-
 		return participantes
 	end
 
 	#Roda processo de invalidez
 	def processa_invalidez(participantes)
+		participantes.each do |p|
+			if p.vivo and !(p.invalido)
+				if entrou_invalidez(p)
+					p.invalido = true
+					p.status = "Desligado"
+				end
+			end
+		end
 		return participantes
 	end
 
@@ -96,38 +92,21 @@ class PlanoPrevidencia
 	end
 
 	####################################################################
-	#Métodos de carga de parâmetros estruturados
+	#Métodos de apoio aos processos previdenciários
 	####################################################################
-	def	load_tabua_mortalidade(arquivo)
-		tabua_mortalidade = csv2hashes(arquivo)
-	end
 
-	def load_tabua_invalidez(arquivo)
-		tabua_invalidez = csv2hashes(arquivo)
-	end
-
-	####################################################################
-	#Métodos de pesquisa nas tabelas e tábuas
-	####################################################################
-	def fatores_contribuicao(h)
-		fatores = @tabela_contribuicao.detect do |c| 
-			p[:quadro]==c[:quadro] and \
-			p[:nivel]==c[:nivel] and \		
-			p[:classe]==c[:classe] and
-		end
-		return fatores
-	end
-
-	def fator_joia(h)
-		#return fator
-	end
-
-	#Sorteia a morte de um determinado participante de acordo com a tábua de mortalidade
-	def matou(p)
-		linha = @tabua_mortalidade.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
-		p_morto = 
+	#Sorteia a morte de um determinado participante
+	def morreu(p)
+		p_morto = @t.probabilidade_morte(p)
 		p_vivo = Probability.uniform(1, params).first
 		p_vivo >= p_morto ? s = false : s = true
+	end
+
+	#Sorteia a invalidez de um determinado participante
+	def entrou_invalidez(p)
+		p_invalido = @t.probabilidade_invalidez(p)
+		p_valido = Probability.uniform(1, params).first
+		p_valido >= p_invalido ? s = false : s = true
 	end
 
 end

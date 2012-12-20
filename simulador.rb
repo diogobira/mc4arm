@@ -21,11 +21,11 @@ class Simulador
 		total_nu_ativos_inicial = participantes.count{|p| p.nivel == "Superior" and p.status == "Ativo"}
 		totais_ativos = {:total_nm_ativos_inicial=>total_nm_ativos_inicial, :total_nu_ativos_inicial=>total_nu_ativos_inicial}
 
-		#Array de saída
-		cashFlow = Array.new
-
 		#Loop em todas as combinações de parâmetros	
 		@p.combinacoes.comprehend do |c|
+
+			#Array de saída
+			cashFlow = Array.new
 
 			#Hash com parametros do loop corrente	
 			h = Hash.new
@@ -53,7 +53,7 @@ class Simulador
 
 				#Atualiza o array cashFlow
 				fluxo_ano_corrente = {:ano => @anosimulacao, :receitas => receitas,:despesas => despesas}
-				cashFlow << fluxo_ano_corrente.merge(h)
+				cashFlow << fluxo_ano_corrente
 
 				#Processos de atualização da lista de participantes
 				participantes = patrocinador.processa_promocao_anual(participantes)
@@ -66,12 +66,15 @@ class Simulador
 				participantes = plano.processa_invalidez(participantes)
 				participantes = plano.processa_aposentadoria(participantes)
 				participantes = patrocinador.processa_contratacoes(participantes)
+				#participantes = patrocinador.processa_salarios(participantes)
 
 			end
 
-		end
+			#Merge com parametros correntes e salva no banco de dados
+		 	h.merge!({:flows => cashFlow})
+			#salva no h
 
-		return cashFlow
+		end
 
 	end
 

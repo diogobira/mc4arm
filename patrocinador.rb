@@ -11,10 +11,17 @@ class Patrocinador
 		#Atributos simples
 		h.each_pair {|k,v| instance_variable_set("@#{key}",v)} 			
 
+		#Tabelas e Tábuas
+		@t = Tabelas.new(h)		
+
 		#Atributos estruturados
-		@tabela_salarial = load_tabela(@patrocinador_tabela_salarial)
-		@tabela_ats = load_tabela(@patrocinador_tabela_ats)
-		@tabela_funcoes = load_tabela(@patrocinador_tabela_funcoes)
+		@tabela_salarial = @t.tabela_salarial
+		@tabela_ats = @t.tabela_ats
+		@tabela_contribuicao = @t.tabela_contribuicao
+		@tabela_joia = @t.tabela_joia
+		@tabela_funcoes = @t.tabela_funcoes
+		@tabua_mortalidade = @t.tabua_mortalidade
+		@tabua_invalidez = @t.tabua_invalidez
 
 	end
 
@@ -50,11 +57,12 @@ class Patrocinador
 		#Altera as classes e, caso necessário, o status de topado
 		participantes_nm_indexes[0,qtd_promovidos_nm].each do |i| 
 			participantes[i].classe+=1
-			participantes[i].topado = true if topo_carreira(participantes[i]) == participantes[i].classe
+			participantes[i].topado = true if @t.topo_carreira(participantes[i]) == participantes[i].classe
 		end
+
 		participantes_nu_indexes[0,qtd_promovidos_nu].each do |i| 
 			participantes[i].classe+=1
-			participantes[i].topado = true if topo_carreira(participantes[i]) == participantes[i].classe
+			participantes[i].topado = true if @t.topo_carreira(participantes[i]) == participantes[i].classe
 		end
 
 		return participantes
@@ -65,9 +73,9 @@ class Patrocinador
 	def processa_salarios(participantes)
 		participantes.map! do |p|
 			if p.status == "Ativo"
-				salario_base = salario_base(p)
-				ats = ats(p)
-				adicional_funcao = adicional_funcao(p)
+				salario_base = @t.salario_base(p)
+				ats = @t.ats(p)
+				adicional_funcao = @t.adicional_funcao(p)
 				p.salario = (salario_base + salario_base * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
 			end
 		end
@@ -129,51 +137,32 @@ class Patrocinador
 		deficit_nu = @total_nu_ativos_inicial - total_ativos_nu
 
 		#Déficit que serão cobertos
-		#deficit_nm = deficit_nm * 
-		#deficit_nu = deficit_nu * 
+		#deficit_nm = deficit_nm * Probability.
+		#deficit_nu = deficit_nu * Probability.
 	
 		#Novos participantes
-		(1..deficit_nm).each {|i| participantes << Participante.new(:nivel=>"Medio")}
-		(1..deficit_nu).each {|i| participantes << Participante.new(:nivel=>"Superior")}
+		(1..deficit_nm).each do |i| 
+			participantes << Participante.new(
+				:nivel=>"Medio", 	
+				:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Medio"),
+				:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Medio"),
+				:quadro=>@patrocinador_quadro_entrantes
+			)
+		end
+
+		(1..deficit_nu).each do |i| 
+			participantes << Participante.new(
+				:nivel=>"Superior", 
+				:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Superior"),
+				:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Superior"),
+				:quadro=>@patrocinador_quadro_entrantes
+			)
+		end
 
 		return participantes
 
 	end
 
-	####################################################################
-	#Métodos de pesquisa nas tabelas
-	####################################################################
-
-	#Retorna o topo da carreira na qual um determinado participante está enquadrado
-	def topo_carreira(p)
-		t = @tabela_salarial.detect {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel}
-		return t[:classe]
-	end
-
-	#Retorna o salário base do participante
-	def salario_base(p)
-			s = @tabela_salarial.detect {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel and s[:classe] == p.classe}
-			return s[:salario_base]			
-	end
-
-	#Retorna o adicional por tempo de serviço do participante
-	def ats(p)
-		a = @tabela_ats.detect {|a| s[:quadro] == p.quadro and s[:tempo_empresa] == p.tempo_empresa}
-		return a[:ats]
-	end
-
-	#Retorna o adicional de função do participante
-	def adicional_funcao(p)
-		if !(p.funcao_ativa.nil?) 
-			adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_ativa}
-		elsif !(p.funcao_incorporada.nil?) 
-			adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_incorporada}
-			adicional_funcao = adicional_funcao * p.funcao_incorporada_prc
-		else
-			adicional_funcao = 0
-		end
-		return adicional_funcao
-	end
 
 	####################################################################
 	#Métodos auxiliares

@@ -82,7 +82,10 @@ class Parametros
 
 		end
 
+		#Intercala simbolos e valores combináveis
 		x = simbolos_combinaveis.zip(valores_combinaveis)
+
+		#Gera um vetor flat
 		@combinacoes = x.map{|s,v| v.map {|p| [s,p]}}.map{|k| k.map{|j| Hash[*j]}}
 
 		#Arrays iniciais de participantes e dependentes
