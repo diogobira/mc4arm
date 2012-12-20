@@ -27,6 +27,7 @@ previdencia:
  previdencia_inss_idade_aposentadoria_homem: SimpleList;Number;60
  previdencia_idade_aposentadoria_mulher: SimpleList;Number;55
  previdencia_tabua_mortalidade: SimpleList;String;data/tabua_mortalidade.csv
+ previdencia_tabua_mortalidade_por_invalidez: SimpleList;String;data/tabua_mortalidade_invalidez.csv
  previdencia_tabua_invalidez: SimpleList;String;data/tabua_invalidez.csv
 
 #####################################
@@ -41,6 +42,8 @@ patrocinador:
  patrocinador_prc_promovidos_ano: SimpleList;Number;30,35,40
  patrocinador_variacao_quadro: Distribution;Number;Uniform 0 1
  patrocinador_idade_entrantes: Distribution;Number;Normal 32 4
+ patrocinador_quadro_entrantes: Simple;String;PECS
+ patrocinador_quadro_teto: Distribution;Number;DiscreteUniform 2500 4000 100
  patrocinador_prc_homens_entrantes: Distribution;Number;Bernoulli 0.5
  patrocinador_tempo_servico_entrantes: Distribution;Number;Normal 10 5
 
