@@ -1,7 +1,7 @@
 module Probability
     require 'RSRuby'
 
-    R = RSRuby.instance
+    @R = RSRuby.instance
 
 	######################################################
 	#Funções que geram amostras de uma dada distribuição
@@ -12,7 +12,7 @@ module Probability
         p = params[0] || 0.5 #prob de sucesso (se não informado, usar 0.5)
         
         #chama a função relacionada no R
-        R.rbinom(num_samples, 1, p)
+        @R.rbinom(num_samples, 1, p)
 	end
 
     #Normal
@@ -21,7 +21,7 @@ module Probability
         std_dev = params[1] || 1 #desvio-padrão (se não informado, usar 1)
         
         #chama a função relacionada no R
-        R.rnorm(num_samples, mean, std_dev)
+        @R.rnorm(num_samples, mean, std_dev)
 	end
 
     #Uniforme (contínua)
@@ -30,7 +30,7 @@ module Probability
         max = params[1] || 1 #máximo (se não informado, usar 1)
 
         #chama a função relacionada no R
-        R.runif(num_samples, min, max)
+        @R.runif(num_samples, min, max)
 	end
 
     #Uniforme (discreta)
@@ -44,7 +44,7 @@ module Probability
         elems = (min..max).step(delta).to_a
 
         #chama a função relacionada no R
-        R.sample(elems, num_samples, true)
+        @R.sample(elems, num_samples, true)
     end
 
     #Array constante com referências para funções que implementam
