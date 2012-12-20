@@ -94,11 +94,15 @@ class Tabelas
 	###########################################################################
 
 	def fatores_contribuicao(p)
+        p p.status
+        p p.quadro
+        p p.nivel
+        p p.classe
 		fatores = @tabela_contribuicao.detect do |c| 
-			p[:status]==c[:status] and \
-			p[:quadro]==c[:quadro] and \
-			p[:nivel]==c[:nivel] and \		
-			p[:classe]==c[:classe] and
+			p.status==c[:status] and  
+			p.quadro==c[:quadro] and 
+			p.nivel==c[:nivel] and 		
+			p.classe==c[:classe]
 		end
 		return fatores
 	end

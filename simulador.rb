@@ -1,6 +1,9 @@
 class Simulador
 
-	require 'Persistencia'
+	require 'persistencia.rb'
+    require 'array.rb'
+    require 'patrocinador.rb'
+    require 'plano_previdencia.rb'
 
 	#Inicialização
 	def initialize(parametros)

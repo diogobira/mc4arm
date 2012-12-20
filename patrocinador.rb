@@ -1,6 +1,7 @@
 require 'loader.rb'
 require 'probability.rb'
 require 'participantes_helper.rb'
+require 'tabelas.rb'
 
 class Patrocinador
 
@@ -11,7 +12,7 @@ class Patrocinador
 	def initialize(h)
 
 		#Atributos simples
-		h.each_pair {|k,v| instance_variable_set("@#{key}",v)} 			
+		h.each_pair {|k,v| instance_variable_set("@#{k}",v)} 			
 
 		#Tabelas e Tábuas
 		@t = Tabelas.new(h)		
@@ -157,10 +158,11 @@ class Patrocinador
 									h[:patrocinador_prc_homens_entrantes][:distr], 
 									h[:patrocinador_prc_homens_entrantes][:params]
 								) == 1) ? "M" : "F",
-			  :idade=>Probability.random_sampl(
+			    :idade=>Probability.random_sample(
 									1, 
 									h[:patrocinador_idade_entrantes][:distr], 
 									h[:patrocinador_idade_entrantes][:params]
+                                )
 				}, 
 				false
 			)
@@ -178,7 +180,7 @@ class Patrocinador
 									h[:patrocinador_prc_homens_entrantes][:distr], 
 									h[:patrocinador_prc_homens_entrantes][:params]
 								) == 1) ? "M" : "F",
-			  :idade=>Probability.random_sampl(
+			    :idade=>Probability.random_sample(
 									1, 
 									h[:patrocinador_idade_entrantes][:distr], 
 									h[:patrocinador_idade_entrantes][:params]
