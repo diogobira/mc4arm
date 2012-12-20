@@ -1,11 +1,11 @@
 require 'yaml'
-require 'probability.rb'
+#require 'probability.rb'
 require 'loader.rb'
 
 class Parametros
 
 	#Includes
-	include Probability
+	#include Probability
 	include Loader
 
 	#Accessors para atributos derivados.
@@ -68,7 +68,7 @@ class Parametros
 						partes = value.split(/\s+/)
 						dist_fun = partes[0]
 						dist_params = partes[1,partes.length-1].map{|x| x.to_f}
-						instance_variable_set("@#{key}", {:distribution=>dist_fun, :parameters=>dist_params}) 					
+						instance_variable_set("@#{key}", {:distr=>dist_fun, :params=>dist_params}) 					
 
 				end
 

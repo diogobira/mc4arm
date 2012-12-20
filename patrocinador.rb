@@ -1,10 +1,12 @@
 require 'loader.rb'
 require 'probability.rb'
+require 'participantes_helper.rb'
 
 class Patrocinador
 
 	include Loader
 	include Probability
+	include ParticipantesHelper
 
 	def initialize(h)
 
@@ -69,14 +71,16 @@ class Patrocinador
 
 	end
 
-	#Roda processo de atualização de salários
+	#Roda processo de atualização de salários e beneficio correspondente
 	def processa_salarios(participantes)
 		participantes.map! do |p|
 			if p.status == "Ativo"
 				salario_base = @t.salario_base(p)
+				salario_beneficio = @t.salario_base_beneficio(p)
 				ats = @t.ats(p)
 				adicional_funcao = @t.adicional_funcao(p)
 				p.salario = (salario_base + salario_base * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
+				p.beneficio = (salario_beneficio + salario_beneficio * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
 			end
 		end
 		return participantes
@@ -143,49 +147,49 @@ class Patrocinador
 		#Novos participantes
 		(1..deficit_nm).each do |i| 
 			participantes << Participante.new(
+			 {
 				:nivel=>"Medio", 	
 				:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Medio"),
 				:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Medio"),
-				:quadro=>@patrocinador_quadro_entrantes
+				:quadro=>@patrocinador_quadro_entrantes,
+				:sexo=>(Probability.random_sample(
+									1, 
+									h[:patrocinador_prc_homens_entrantes][:distr], 
+									h[:patrocinador_prc_homens_entrantes][:params]
+								) == 1) ? "M" : "F",
+			  :idade=>Probability.random_sampl(
+									1, 
+									h[:patrocinador_idade_entrantes][:distr], 
+									h[:patrocinador_idade_entrantes][:params]
+				}, 
+				false
 			)
 		end
 
 		(1..deficit_nu).each do |i| 
 			participantes << Participante.new(
+			 {
 				:nivel=>"Superior", 
 				:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Superior"),
 				:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Superior"),
-				:quadro=>@patrocinador_quadro_entrantes
+				:quadro=>@patrocinador_quadro_entrantes,
+				:sexo=>(Probability.random_sample(
+									1, 
+									h[:patrocinador_prc_homens_entrantes][:distr], 
+									h[:patrocinador_prc_homens_entrantes][:params]
+								) == 1) ? "M" : "F",
+			  :idade=>Probability.random_sampl(
+									1, 
+									h[:patrocinador_idade_entrantes][:distr], 
+									h[:patrocinador_idade_entrantes][:params]
+								)
+			 }, 
+			 false
 			)
 		end
 
 		return participantes
 
-	end
-
-
-	####################################################################
-	#Métodos auxiliares
-	####################################################################
-	
-	#Indices dos participantes que atendem um determinado criterio
-	def participantes_index(participantes,h)
-		indexes = Array.new
-		participantes.each_with_index do |p,index|
-			criterios_atendidos = Array.new
-			h.each_key do |k|
-				criterios_atendidos << p.instance_variable_get("@#{k.to_s}") == h[k]				
-			end
-			indexes << index if criterios_atendidos.reduce(:&)
-		end
-		return indexes
-	end
-
-	#Indices dos participantes que não atendem a um determinado critério
-	def participantes_index_complementar(participantes,h)
-		all_indexes = (0..participantes.length-1).to_a
-		indexes = participantes_index_complementar(participantes,h)
-		return all_indexes - indexes
 	end
 
 

@@ -29,12 +29,12 @@ class Participante
 	attr_accessor :dependentes
 
 	#Inicialização
-	def initialize(h)
+	def initialize(h, arquivo=false)
 
-		if params.nil?
+		if !arquivo
 
-			@matricula = 
-			@sexo = Probability.
+			#@matricula = 
+			@sexo = h[:sexo]
 			@vivo = true
 			@invalido = false
 			@quadro = h[:quadro]
@@ -48,9 +48,10 @@ class Participante
 			@funcao_incorporada = nil
 			@funcao_incorporada_prc = nil
 			@status = "Ativo"
-			@idade = Probability.
+			@idade = h[:idade]
 			@salario = h[:salario]
-			@dependentes = Probability.
+			@beneficio = 0
+			#@dependentes = Probability.
 
 		else
 			h.each_pair {|key,value| instance_variable_set("@#{key}",value)} 			
@@ -73,6 +74,7 @@ class Participante
 			#@status
 			@idade = @idade.to_i
 			@salario = @salario.to_f
+			@beneficio = @beneficio.to_f
 			#@dependentes
 
 		end

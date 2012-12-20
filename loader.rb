@@ -18,7 +18,7 @@ module Loader
 	def load_participantes(arquivo)
 		participantes = Array.new
 		hashes = csv2hashes(arquivo)
-		hashes.each {|h| participantes << Participante.new(h)}
+		hashes.each {|h| participantes << Participante.new(h, true)}
 		return participantes
 	end
 

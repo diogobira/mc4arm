@@ -1,4 +1,12 @@
+require 'loader.rb'
+require 'probability.rb'
+require 'participantes_helper.rb'
+
 class PlanoPrevidencia
+
+	include Loader
+	include Probability
+	include ParticipantesHelper
 
 	def initialize(h)
 
@@ -23,21 +31,30 @@ class PlanoPrevidencia
 	#Cálculos de contribuições e benefícios
 	####################################################################
 
+	#Calculo da contribuicao anual liquida do participante
 	def contribuicao_anual(participante)
 		p = participante
+		sc = p.salario
+		tinss = @previdencia_inss_teto_aposentadoria
+		f = fatores_contribuicao(p)
+		c = f[:f1]*sc + f[:f2]*(sc-tinss/2) + f[:f3]*(sc-tinss)
 		case p.status
 			when "Ativo"
-				contribuicao = 0
-			when "Aposentado"
-				contribuicao = 0
+				contribuicao_mensal = c * (1-@previdencia_tx_adm_ativos)				
+			when "Desligado"
+				contribuicao_mensal = 0
 		end
-
-		return contribuicao
+		contribuicao_anual = contribuicao_mensal * @previdencia_qtd_contribuicoes_ano
+		return contribuicao_anual
 	end
 
+	#Calculo do beneficio anual liquido a ser recebido por um participante
 	def beneficio_anual(participante)
 		p = participante
-		return beneficio
+		b = p.beneficio 
+		beneficio_mensal = b * (1-@previdencia_tx_adm_aposentados)					
+		beneficio_anual = beneficio_mensal * @previdencia_qtd_pagamentos_ano
+		return beneficio_anual
 	end
 
 	####################################################################
@@ -48,16 +65,38 @@ class PlanoPrevidencia
 	def processa_idade(participantes)
 		participantes.map! do |p| 	
 			p.idade = p.idade + 1
-			p.dependentes.map! do |d|
-				d.idade = d.idade + 1
-			end
+			p.dependentes.map! {|d| d.idade= d.idade + 1}
 		end
 		return participantes
 	end
 
 	#Roda processo de aposentadoria
 	def processa_aposentadoria(participantes)
+
+		#Idades e tempos mínimos para aposentadoria
+		idade_h = @previdencia_inss_idade_aposentadoria_homem
+		idade_m = @previdencia_inss_idade_aposentadoria_mulher
+		t_minimo = @previdencia_tempo_minimo
+
+		#Participantes ativos
+		ativos_indexes = participantes_ativos(participantes) 
+
+		#Regras para aposentadoria
+		ativos_indexes.each do |i|
+			case participantes[i].sexo
+				when "M"
+					if participantes[i].idade >= idade_h and participantes[i].tempo_empresa >= t_minimo
+						participantes[i].status = "Desligado"  
+					end
+				when "F"
+					if participantes[i].idade >= idade_m and participantes[i].tempo_empresa >= t_minimo
+						participantes[i].status = "Desligado"  
+					end
+				end
+		end
+
 		return participantes
+
 	end
 
 	#Roda processo de mortalidade

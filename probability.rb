@@ -50,10 +50,10 @@ module Probability
     #Array constante com referências para funções que implementam
     # as funções que geram as amostras segundo distribuições conhecidas
     DIST_FUNCS = {
-        :bern => self.method(:bernoulli),
-        :norm => self.method(:normal),
-        :unif => self.method(:uniform),
-        :dunif => self.method(:discrete_uniform)
+        :Bernoulli => self.method(:bernoulli),
+        :Normal => self.method(:normal),
+        :Uniform => self.method(:uniform),
+        :DiscreteUniform => self.method(:discrete_uniform)
     }
 
 	def Probability.random_sample(num_samples, dist_name, dist_params)

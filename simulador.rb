@@ -1,10 +1,12 @@
 class Simulador
 
+	require 'Persistencia'
+
 	#Inicialização
 	def initialize(parametros)
 		@p = parametros
-		@anoatual = 
-		@anosimulacao = 
+		@anoatual = Time.now.year
+		@anosimulacao = @anoatual
 	end	
 
 	#Executa a simulação
@@ -73,6 +75,7 @@ class Simulador
 			#Merge com parametros correntes e salva no banco de dados
 		 	h.merge!({:flows => cashFlow})
 			#salva no h
+			Persistencia.salva("cashflows", h)
 
 		end
 

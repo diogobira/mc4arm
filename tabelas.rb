@@ -21,6 +21,8 @@ class Tabelas
 		@tabela_funcoes = load_tabela(h[:patrocinador_tabela_funcoes])
 		@tabua_mortalidade = load_tabua(h[:previdencia_tabua_mortalidade])
 		@tabua_invalidez = load_tabua(h[:previdencia_tabua_invalidez])
+		@cap_nu = h[:previdencia_cap_nu]
+		@cap_nm = h[:previdencia_cap_nm]
 	end
 
 	###########################################################################
@@ -35,19 +37,36 @@ class Tabelas
 
 	#Retorna a classe inicial dados quadro e nivel
 	def classe_inicial(quadro,nivel)
-		t = @tabela_salarial.select {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel}.first
+		t = @tabela_salarial.select {|s| s[:quadro] == quadro and s[:nivel] == nivel}.first
 		return t[:classe]
 	end
 
 	#Retorna o salário inicial dados quadro e nivel
 	def salario_inicial(quadro,nivel)
-		t = @tabela_salarial.select {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel}.first
+		t = @tabela_salarial.select {|s| s[:quadro] == quadro and s[:nivel] == nivel}.first
+		return t[:salario_base]
+	end
+
+	#Retorna o salário dados quadro, nivel e classe
+	def salario(quadro,nivel,classe)
+		t = @tabela_salarial.select {|s| s[:quadro]==quadro and s[:nivel]==nivel and s[:classe]=classe}.first
 		return t[:salario_base]
 	end
 
 	#Retorna o salário base do participante
 	def salario_base(p)
 			s = @tabela_salarial.detect {|s| s[:quadro] == p.quadro and s[:nivel] == p.nivel and s[:classe] == p.classe}
+			return s[:salario_base]			
+	end
+
+	#Retorna o salário base de benefício do participante
+	def salario_base_beneficio(p)
+			classe_topo = topo_carreira(p) + (p.nivel=="Superior" ? @cap_nu : @cap_nm)
+			s = @tabela_salarial.detect do |s| 
+				s[:quadro] == p.quadro and \
+				s[:nivel] == p.nivel and \
+				s[:classe] == [p.classe,classe_topo].min
+			end
 			return s[:salario_base]			
 	end
 
@@ -76,6 +95,7 @@ class Tabelas
 
 	def fatores_contribuicao(p)
 		fatores = @tabela_contribuicao.detect do |c| 
+			p[:status]==c[:status] and \
 			p[:quadro]==c[:quadro] and \
 			p[:nivel]==c[:nivel] and \		
 			p[:classe]==c[:classe] and
@@ -83,8 +103,8 @@ class Tabelas
 		return fatores
 	end
 
-	def fator_joia(h)
-		return 0
+	def fator_joia(p)
+		return 0.05
 	end
 
 	###########################################################################
