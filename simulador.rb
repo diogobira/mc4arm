@@ -62,7 +62,7 @@ class Simulador
 
 				#Processos de atualização da lista de participantes
 				participantes = patrocinador.processa_promocao_anual(participantes)
-				participantes = patrocinador.processa_ats(participantes)
+				#participantes = patrocinador.processa_ats(participantes)
 				participantes = patrocinador.processa_promocao_funcao(participantes)
 				participantes = patrocinador.processa_incorporacao_funcao(participantes)
 				participantes = patrocinador.processa_salarios(participantes)

@@ -8,7 +8,7 @@ module Loader
 	def csv2hashes(arquivo)
 		csv_data = CSV.read(arquivo)
 		headers = csv_data.shift.map {|i| i.downcase.to_sym}
-		data = csv_data.map {|row| row.map {|cell| cell.to_s.is_numeric? ? cell.to_s.to_f : cell.to_s }}
+		data = csv_data.map {|row| row.map {|cell| cell.to_s.is_numeric? ? cell.to_s.to_numeric : cell.to_s }}
 		array_of_hashes = data.map {|row| Hash[*headers.zip(row).flatten]}
 		return array_of_hashes
 	end

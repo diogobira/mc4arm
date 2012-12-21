@@ -11,4 +11,9 @@ class String
         self =~ (/^[\d]+(\.[\d]+){0,1}$/)
     end
 
+    def to_numeric
+        return self.to_f if self =~ (/^[\d]+(\.[\d]+){0,1}$/)
+        return self.to_i if self =~ (/^[\d]+$/)
+    end
+
 end

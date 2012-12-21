@@ -42,8 +42,8 @@ class Patrocinador
 	def processa_promocao_anual(participantes)
 
 		#Candidatos a promoção
-		participantes_nm_indexes = participantes_index({:status=>"Ativo",:nivel=>"Medio",:topado=>false})
-		participantes_nu_indexes = participantes_index({:status=>"Ativo",:nivel=>"Superior",:topado=>false})
+		participantes_nm_indexes = participantes_index(participantes, {:status=>"Ativo",:nivel=>"Medio",:topado=>false})
+		participantes_nu_indexes = participantes_index(participantes, {:status=>"Ativo",:nivel=>"Superior",:topado=>false})
 
 		#Totais de ativos por nível
 		total_nm = participantes_nm_indexes.length
@@ -114,7 +114,7 @@ class Patrocinador
 
 			#Identifica e embaralha os candidatos para simular aleatoriedade na promoção
 			candidatos = participantes_index_complementar(participantes,{:status=>"Ativo",:funcao_ativa=>f[:nome]})			
-			candidatos.suffle!
+			candidatos.shuffle!
 
 			#Promove os candidatos
 			candidatos[0,vagas_disponiveis].each {|i| participantes[i].funcao_ativa=f[:nome]}

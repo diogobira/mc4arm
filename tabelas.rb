@@ -72,21 +72,23 @@ class Tabelas
 
 	#Retorna o adicional por tempo de serviço do participante
 	def ats(p)
-		a = @tabela_ats.detect {|a| s[:quadro] == p.quadro and s[:tempo_empresa] == p.tempo_empresa}
+		a = @tabela_ats.detect {|s| s[:quadro] == p.quadro and s[:tempo_empresa] == p.tempo_empresa}
 		return a[:ats]
 	end
 
 	#Retorna o adicional de função do participante
 	def adicional_funcao(p)
 		if !(p.funcao_ativa.nil?) 
-			adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_ativa}
+			f = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_ativa}
+            adicional = f[:adicional]
 		elsif !(p.funcao_incorporada.nil?) 
-			adicional_funcao = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_incorporada}
-			adicional_funcao = adicional_funcao * p.funcao_incorporada_prc
+			f = @tabela_funcoes.detect {|f| f[:nome] == p.funcao_incorporada}
+            adicional = f[:adicional]
+			adicional = adicional * p.funcao_incorporada_prc
 		else
-			adicional_funcao = 0
+			adicional = 0
 		end
-		return adicional_funcao
+		return adicional
 	end
 
 	###########################################################################
@@ -94,10 +96,6 @@ class Tabelas
 	###########################################################################
 
 	def fatores_contribuicao(p)
-        p p.status
-        p p.quadro
-        p p.nivel
-        p p.classe
 		fatores = @tabela_contribuicao.detect do |c| 
 			p.status==c[:status] and  
 			p.quadro==c[:quadro] and 
