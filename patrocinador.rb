@@ -83,6 +83,7 @@ class Patrocinador
 				p.salario = (salario_base + salario_base * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
 				p.beneficio = (salario_beneficio + salario_beneficio * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
 			end
+            p
 		end
 		return participantes
 	end
