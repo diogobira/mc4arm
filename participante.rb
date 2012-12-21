@@ -1,10 +1,8 @@
-require 'loader.rb'
 require 'probability.rb'
 require 'string.rb'
 
 class Participante
 
-	include Loader
 	include Probability
 
 	#Atributos
@@ -27,6 +25,7 @@ class Participante
 	attr_accessor :idade
 	attr_accessor :salario
 	attr_accessor :dependentes
+    attr_accessor :beneficio
 
 	#Inicialização
 	def initialize(h, arquivo=false)

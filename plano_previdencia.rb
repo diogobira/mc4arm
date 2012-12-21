@@ -11,7 +11,7 @@ class PlanoPrevidencia
 	def initialize(h)
 
 		#Atributos simples
-		h.each_pair {|k,v| instance_variable_set("@#{key}",v)} 			
+		h.each_pair {|k,v| instance_variable_set("@#{k}",v)} 			
 
 		#Tabelas e Tábuas
 		@t = Tabelas.new(h)		
@@ -36,7 +36,7 @@ class PlanoPrevidencia
 		p = participante
 		sc = p.salario
 		tinss = @previdencia_inss_teto_aposentadoria
-		f = fatores_contribuicao(p)
+		f = @t.fatores_contribuicao(p)
 		c = f[:f1]*sc + f[:f2]*(sc-tinss/2) + f[:f3]*(sc-tinss)
 		case p.status
 			when "Ativo"
