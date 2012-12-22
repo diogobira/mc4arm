@@ -26,7 +26,7 @@ module ParticipantesHelper
 	end
 
 	#Indices dos participantes desligados
-	def participantes_ativos(participantes)
+	def participantes_desligados(participantes)
 		indexes = participantes_index(participantes,{:status=>"Desligado"})	
 	end
 
