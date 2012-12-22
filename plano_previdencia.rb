@@ -65,7 +65,8 @@ class PlanoPrevidencia
 	def processa_idade(participantes)
 		participantes.map! do |p| 	
 			p.idade = p.idade + 1
-			p.dependentes.map! {|d| d.idade= d.idade + 1}
+			#p.dependentes.map! {|d| d.idade= d.idade + 1}
+            p
 		end
 		return participantes
 	end
@@ -101,26 +102,28 @@ class PlanoPrevidencia
 
 	#Roda processo de mortalidade
 	def processa_morte(participantes)
-		participantes.each do |p|
+		participantes.map! do |p|
 			if p.vivo
 				if morreu(p)
 					p.vivo = false
 					p.status = "Desligado"
 				end
 			end
+            p
 		end
 		return participantes
 	end
 
 	#Roda processo de invalidez
 	def processa_invalidez(participantes)
-		participantes.each do |p|
+		participantes.map! do |p|
 			if p.vivo and !(p.invalido)
 				if entrou_invalidez(p)
 					p.invalido = true
 					p.status = "Desligado"
 				end
 			end
+            p
 		end
 		return participantes
 	end
