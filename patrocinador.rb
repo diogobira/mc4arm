@@ -156,13 +156,13 @@ class Patrocinador
 				:quadro=>@patrocinador_quadro_entrantes,
 				:sexo=>(Probability.random_sample(
 									1, 
-									h[:patrocinador_prc_homens_entrantes][:distr], 
-									h[:patrocinador_prc_homens_entrantes][:params]
+									@patrocinador_prc_homens_entrantes[:distr], 
+									@patrocinador_prc_homens_entrantes[:params]
 								) == 1) ? "M" : "F",
 			    :idade=>Probability.random_sample(
 									1, 
-									h[:patrocinador_idade_entrantes][:distr], 
-									h[:patrocinador_idade_entrantes][:params]
+									@patrocinador_idade_entrantes[:distr], 
+									@patrocinador_idade_entrantes[:params]
                                 )
 				}, 
 				false
@@ -178,13 +178,13 @@ class Patrocinador
 				:quadro=>@patrocinador_quadro_entrantes,
 				:sexo=>(Probability.random_sample(
 									1, 
-									h[:patrocinador_prc_homens_entrantes][:distr], 
-									h[:patrocinador_prc_homens_entrantes][:params]
+									@patrocinador_prc_homens_entrantes[:distr], 
+									@patrocinador_prc_homens_entrantes[:params]
 								) == 1) ? "M" : "F",
 			    :idade=>Probability.random_sample(
 									1, 
-									h[:patrocinador_idade_entrantes][:distr], 
-									h[:patrocinador_idade_entrantes][:params]
+									@patrocinador_idade_entrantes[:distr], 
+									@patrocinador_idade_entrantes[:params]
 								)
 			 }, 
 			 false
