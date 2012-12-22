@@ -139,16 +139,16 @@ class PlanoPrevidencia
 
 	#Sorteia a morte de um determinado participante
 	def morreu(p)
-		p_morto = @t.probabilidade_morte(p)
-		p_vivo = Probability.uniform(1, params).first
-		p_vivo >= p_morto ? s = false : s = true
+		prob_morte = @t.probabilidade_morte(p)
+		morto = Probability.random_sample(1, :Bernoulli, [prob_morte])
+		morto == 1 ? s = false : s = true
 	end
 
 	#Sorteia a invalidez de um determinado participante
 	def entrou_invalidez(p)
-		p_invalido = @t.probabilidade_invalidez(p)
-		p_valido = Probability.uniform(1, params).first
-		p_valido >= p_invalido ? s = false : s = true
+		prob_invalidez = @t.probabilidade_invalidez(p)
+		invalido = Probability.random_sample(1, :Bernoulli, [prob_invalidez])
+		invalido == 1 ? s = false : s = true
 	end
 
 end
