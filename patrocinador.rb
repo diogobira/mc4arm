@@ -10,7 +10,6 @@ class Patrocinador
 	include ParticipantesHelper
 
 	def initialize(h)
-
 		#Atributos simples
 		h.each_pair {|k,v| instance_variable_set("@#{k}",v)} 			
 
@@ -145,7 +144,7 @@ class Patrocinador
 		#Déficit que serão cobertos
 		#deficit_nm = deficit_nm * Probability.
 		#deficit_nu = deficit_nu * Probability.
-	
+
 		#Novos participantes
 		(1..deficit_nm).each do |i| 
 			participantes << Participante.new(

@@ -10,6 +10,7 @@ class Parametros
 
 	#Accessors para atributos derivados.
 	attr_accessor :combinacoes
+    attr_accessor :nao_combinaveis
 	attr_accessor :participantes
 	attr_accessor :dependentes
 
@@ -17,8 +18,11 @@ class Parametros
 	def initialize(arquivo)
 
 		@combinacoes = Array.new
-		valores_combinaveis = Array.new
 		simbolos_combinaveis = Array.new
+		valores_combinaveis = Array.new
+        @nao_combinaveis = Hash.new
+		simbolos_nao_combinaveis = Array.new
+		valores_nao_combinaveis = Array.new
 		@participantes = Array.new
 
 		config = YAML.load_file(arquivo)
@@ -72,10 +76,14 @@ class Parametros
 
 				end
 
-				#Parametros combináveis	
+
+				#Parâmetros combináveis	
 				if secao != "geral" and type != "Distribution"
 					simbolos_combinaveis << key.to_sym
 					valores_combinaveis << instance_variable_get("@#{key}")
+                else #Parâmetros não combináveis
+                    simbolos_nao_combinaveis << key.to_sym
+                    valores_nao_combinaveis << instance_variable_get("@#{key}")
 				end
 
 			end
@@ -85,8 +93,14 @@ class Parametros
 		#Intercala simbolos e valores combináveis
 		x = simbolos_combinaveis.zip(valores_combinaveis)
 
-		#Gera um vetor flat
+		#Gera um vetor flat com as combinações dos parâmetros combináveis
 		@combinacoes = x.map{|s,v| v.map {|p| [s,p]}}.map{|k| k.map{|j| Hash[*j]}}
+
+        # Acrescenta os parâmetros não combináveis
+		x = simbolos_nao_combinaveis.zip(valores_nao_combinaveis)
+
+        # Gera um hash flat com os parâmetros não combináveis
+        @nao_combinaveis = Hash[*x.flatten]
 
 		#Arrays iniciais de participantes e dependentes
 		@participantes = load_participantes(@geral_arquivo_pessoas)

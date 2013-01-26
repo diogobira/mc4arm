@@ -36,6 +36,7 @@ class Simulador
 			h = Hash.new
 			c.each {|p| h.merge!(p)}
 			h.merge!(totais_ativos)
+            h.merge!(@p.nao_combinaveis)
 
 			#Variáveis de acumulação
 			receitas,despesas = 0,0
