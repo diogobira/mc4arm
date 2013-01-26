@@ -15,10 +15,10 @@ previdencia:
  previdencia_tabela_contribuicao: SimpleList;String;data/tabela_contribuicao.csv
  previdencia_tabela_joia: SimpleList;String;data/tabela_joia.csv
  previdencia_tabela_fator_pensao: SimpleList;String;data/tabela_fator_pensao.csv
- previdencia_qtd_contribuicoes_ano: SimpleList;Number;13,14,15
- previdencia_qtd_pagamentos_ano: SimpleList;Number;13,13,14
- previdencia_tx_adm_ativos: SimpleList;Number;8,9,10
- previdencia_tx_adm_aposentados: SimpleList;Number;5,6,7
+ previdencia_qtd_contribuicoes_ano: SimpleList;Number;13,14
+ previdencia_qtd_pagamentos_ano: SimpleList;Number;13
+ previdencia_tx_adm_ativos: SimpleList;Number;9,10
+ previdencia_tx_adm_aposentados: SimpleList;Number;5,6
  previdencia_cap_nu: SimpleList;Number;-2
  previdencia_cap_nm: SimpleList;Number;-2
  previdencia_tempo_minimo: SimpleList;Number;15
@@ -39,7 +39,7 @@ patrocinador:
  patrocinador_tabela_ats: SimpleList;String;data/tabela_ats.csv
  patrocinador_tabela_funcoes: SimpleList;String;data/tabela_funcoes.csv
  patrocinador_gratificacao: SimpleList;Number;0.25
- patrocinador_prc_promovidos_ano: SimpleList;Number;30,35,40
+ patrocinador_prc_promovidos_ano: SimpleList;Number;30
  patrocinador_variacao_quadro: Distribution;Number;Uniform 0 1
  patrocinador_idade_entrantes: Distribution;Number;Normal 32 4
  patrocinador_quadro_entrantes: Simple;String;PECS
