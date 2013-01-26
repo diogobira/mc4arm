@@ -34,7 +34,7 @@ class Simulador
 		totais_ativos = {:total_nm_ativos_inicial=>total_nm_ativos_inicial, :total_nu_ativos_inicial=>total_nu_ativos_inicial}
 
 		#Total de Combinacoes e de participantes
-		counter_combs = @combinacoes.map{|x| x.length}.reduce(:*)
+		counter_combs = @p.combinacoes.map{|x| x.length}.reduce(:*)
 		@log.info "#{Time.now} Total de combinacoes: #{counter_combs}"
 		@log.info "#{Time.now} Total inicial de participantes: #{participantes.length}"
 
