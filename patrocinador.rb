@@ -162,7 +162,7 @@ class Patrocinador
 									1, 
 									@patrocinador_idade_entrantes[:distr], 
 									@patrocinador_idade_entrantes[:params]
-                                )
+                                ).to_i
 				}, 
 				false
 			)
@@ -184,7 +184,7 @@ class Patrocinador
 									1, 
 									@patrocinador_idade_entrantes[:distr], 
 									@patrocinador_idade_entrantes[:params]
-								)
+								).to_i
 			 }, 
 			 false
 			)

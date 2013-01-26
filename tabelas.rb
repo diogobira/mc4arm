@@ -10,6 +10,7 @@ class Tabelas
 	attr_accessor :tabela_joia
 	attr_accessor :tabela_funcoes
 	attr_accessor :tabua_mortalidade
+    attr_accessor :tabua_mortalidade_por_invalidez
 	attr_accessor :tabua_invalidez
 
 
@@ -20,6 +21,7 @@ class Tabelas
 		@tabela_joia = load_tabela(h[:previdencia_tabela_joia])
 		@tabela_funcoes = load_tabela(h[:patrocinador_tabela_funcoes])
 		@tabua_mortalidade = load_tabua(h[:previdencia_tabua_mortalidade])
+        @tabua_mortalidade_por_invalidez = load_tabua(h[:previdencia_tabua_mortalidade_por_invalidez])
 		@tabua_invalidez = load_tabua(h[:previdencia_tabua_invalidez])
 		@cap_nu = h[:previdencia_cap_nu]
 		@cap_nm = h[:previdencia_cap_nm]
