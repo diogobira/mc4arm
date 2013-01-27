@@ -1,9 +1,11 @@
+require 'log4r'
 require 'loader.rb'
 require 'probability.rb'
 require 'participantes_helper.rb'
 
 class PlanoPrevidencia
 
+	include Log4r
 	include Loader
 	include Probability
 	include ParticipantesHelper
@@ -24,6 +26,9 @@ class PlanoPrevidencia
 		@tabela_funcoes = @t.tabela_funcoes
 		@tabua_mortalidade = @t.tabua_mortalidade
 		@tabua_invalidez = @t.tabua_invalidez
+
+		@log = Logger.new 'PlanoPrevidencia'
+		@log.outputters = Outputter.stdout
 
 	end
 
@@ -66,13 +71,15 @@ class PlanoPrevidencia
 		participantes.map! do |p| 	
 			p.idade = p.idade + 1
 			#p.dependentes.map! {|d| d.idade= d.idade + 1}
-            p
 		end
 		return participantes
 	end
 
 	#Roda processo de aposentadoria
 	def processa_aposentadoria(participantes)
+
+		#Contadores auxiliares
+		conta_aposentadorias = 0
 
 		#Idades e tempos mínimos para aposentadoria
 		idade_h = @previdencia_inss_idade_aposentadoria_homem
@@ -88,13 +95,17 @@ class PlanoPrevidencia
 				when "M"
 					if participantes[i].idade >= idade_h and participantes[i].tempo_empresa >= t_minimo
 						participantes[i].status = "Desligado"  
+						conta_aposentadorias = conta_aposentadorias + 1
 					end
 				when "F"
 					if participantes[i].idade >= idade_m and participantes[i].tempo_empresa >= t_minimo
 						participantes[i].status = "Desligado"  
+						conta_aposentadorias = conta_aposentadorias + 1
 					end
 				end
 		end
+
+		@log.debug "#{Time.now} Total de aposentadorias processadas:#{conta_aposentadorias}/#{ativos_indexes.lenght}"
 
 		return participantes
 
@@ -102,30 +113,50 @@ class PlanoPrevidencia
 
 	#Roda processo de mortalidade
 	def processa_morte(participantes)
+
+		#Contadores auxiliares
+		conta_mortes = 0
+		conta_vivos = 0
+		
 		participantes.map! do |p|
 			if p.vivo
+			conta_vivos = conta_vivos + 1
 				if morreu(p)
 					p.vivo = false
 					p.status = "Desligado"
+					conta_mortes = conta_mortes + 1
 				end
 			end
-            p
 		end
+
+		@log.debug "#{Time.now} Total de mortes processadas:#{conta_mortes}/#{conta_vivos}"
+
 		return participantes
+
 	end
 
 	#Roda processo de invalidez
 	def processa_invalidez(participantes)
+
+		#Contadores auxiliares
+		conta_vivos_validos = 0
+		conta_invalidos = 0
+
 		participantes.map! do |p|
 			if p.vivo and !(p.invalido)
+				conta_vivos_validos = conta_vivos_validos + 1
 				if entrou_invalidez(p)
 					p.invalido = true
 					p.status = "Desligado"
+					conta_invalidos = conta_invalidos + 1
 				end
 			end
-            p
 		end
+
+		@log.debug "#{Time.now} Total de entradas em invalidez processadas:#{conta_invalidos}/#{conta_vivos_validos}"
+
 		return participantes
+
 	end
 
 	#Roda processo de atualização de dependentes
