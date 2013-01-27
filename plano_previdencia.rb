@@ -71,6 +71,7 @@ class PlanoPrevidencia
 		participantes.map! do |p| 	
 			p.idade = p.idade + 1
 			#p.dependentes.map! {|d| d.idade= d.idade + 1}
+            p
 		end
 		return participantes
 	end
