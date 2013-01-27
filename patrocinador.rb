@@ -123,18 +123,18 @@ class Patrocinador
 			#Quantitativos
 			case f[:nivel]
 				when "Medio"
-					vagas = f[:prc] * total_nm
+					vagas = f[:prc]/100 * total_nm
 					ocupantes = participantes_index(participantes,{:status=>"Ativo",:nivel=>"Medio",:funcao_ativa=>f[:nome]})
 					candidatos = participantes_nm_indexes - ocupantes
 				when "Superior"
-					vagas = f[:prc] * total_nu
+					vagas = f[:prc]/100 * total_nu
 					ocupantes = participantes_index(participantes,{:status=>"Ativo",:nivel=>"Superior",:funcao_ativa=>f[:nome]})
 					candidatos = participantes_nu_indexes - ocupantes
 			end
 
 			#Calculo de vagas disponiveis
 			vagas_ocupadas = ocupantes.length			
-			vagas_disponiveis = vagas	- vagas_ocupadas	
+			vagas_disponiveis = vagas.to_i - vagas_ocupadas	
 
 			@log.debug "#{Time.now} Total de vagas disponíveis para #{f[:nome]}: #{vagas_disponiveis}"
 
