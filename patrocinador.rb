@@ -1,3 +1,4 @@
+require 'log4r'
 require 'loader.rb'
 require 'probability.rb'
 require 'participantes_helper.rb'
@@ -5,6 +6,7 @@ require 'tabelas.rb'
 
 class Patrocinador
 
+	include Log4r
 	include Loader
 	include Probability
 	include ParticipantesHelper
@@ -25,6 +27,9 @@ class Patrocinador
 		@tabua_mortalidade = @t.tabua_mortalidade
 		@tabua_invalidez = @t.tabua_invalidez
 
+		@log = Logger.new 'Patrocinador'
+		@log.outputters = Outputter.stdout
+
 	end
 
 	####################################################################
@@ -33,12 +38,20 @@ class Patrocinador
 
 	#Roda processo de atualização de tempo de empresa para ativos
 	def processa_tempo_empresa(participantes)
-		participantes.map! {|p| p.status == "Ativo" ? p.tempo_empresa+=1 : p.tempo_empresa=p.tempo_empresa}
+		participantes.map! do |p| 
+			p.tempo_empresa+=1 if p.status == "Ativo" 
+			p
+		end
+		@log.debug "#{Time.now} Tempo de empresa processado para os participantes ativos"
 		return participantes
 	end
 
 	#Roda processo de promoção anual
 	def processa_promocao_anual(participantes)
+
+		#Contadores auxiliares
+		nm_promovidos = 0
+		nu_promovidos = 0
 
 		#Candidatos a promoção
 		participantes_nm_indexes = participantes_index(participantes, {:status=>"Ativo",:nivel=>"Medio",:topado=>false})
@@ -53,19 +66,24 @@ class Patrocinador
 		participantes_nu_indexes.shuffle!
 	
 		#Quantitativos de participantes ativos a serem promovidos
-		qtd_promovidos_nm = (total_nm * @patrocinador_prc_promovidos_ano).ceil
-		qtd_promovidos_nu = (total_nu * @patrocinador_prc_promovidos_ano).ceil
+		qtd_promovidos_nm = (total_nm * @patrocinador_prc_promovidos_ano/100).ceil
+		qtd_promovidos_nu = (total_nu * @patrocinador_prc_promovidos_ano/100).ceil
 
 		#Altera as classes e, caso necessário, o status de topado
 		participantes_nm_indexes[0,qtd_promovidos_nm].each do |i| 
 			participantes[i].classe+=1
 			participantes[i].topado = true if @t.topo_carreira(participantes[i]) == participantes[i].classe
+			nm_promovidos = nm_promovidos + 1
 		end
 
 		participantes_nu_indexes[0,qtd_promovidos_nu].each do |i| 
 			participantes[i].classe+=1
 			participantes[i].topado = true if @t.topo_carreira(participantes[i]) == participantes[i].classe
+			nu_promovidos = nu_promovidos + 1
 		end
+
+		@log.debug "#{Time.now} Total de promoções NM processadas:#{nm_promovidos}/#{total_nm}"
+		@log.debug "#{Time.now} Total de promoções NU processadas:#{nu_promovidos}/#{total_nu}"
 
 		return participantes
 
@@ -82,8 +100,9 @@ class Patrocinador
 				p.salario = (salario_base + salario_base * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
 				p.beneficio = (salario_beneficio + salario_beneficio * ats + adicional_funcao) * (1 + @patrocinador_gratificacao)
 			end
-            p
+      p
 		end
+		@log.debug "#{Time.now} Atualizando salários dos participantes ativos"
 		return participantes
 	end
 
@@ -105,15 +124,21 @@ class Patrocinador
 			case f[:nivel]
 				when "Medio"
 					vagas = f[:prc] * total_nm
+					ocupantes = participantes_index(participantes,{:status=>"Ativo",:nivel=>"Medio",:funcao_ativa=>f[:nome]})
+					candidatos = participantes_nm_indexes - ocupantes
 				when "Superior"
 					vagas = f[:prc] * total_nu
+					ocupantes = participantes_index(participantes,{:status=>"Ativo",:nivel=>"Superior",:funcao_ativa=>f[:nome]})
+					candidatos = participantes_nu_indexes - ocupantes
 			end
-			ocupantes = participantes_index(participantes,{:status=>"Ativo",:funcao_ativa=>f[:nome]})
+
+			#Calculo de vagas disponiveis
 			vagas_ocupadas = ocupantes.length			
 			vagas_disponiveis = vagas	- vagas_ocupadas	
 
-			#Identifica e embaralha os candidatos para simular aleatoriedade na promoção
-			candidatos = participantes_index_complementar(participantes,{:status=>"Ativo",:funcao_ativa=>f[:nome]})			
+			@log.debug "#{Time.now} Total de vagas disponíveis para #{f[:nome]}: #{vagas_disponiveis}"
+
+			#Embaralha os candidatos para simular aleatoriedade na promoção
 			candidatos.shuffle!
 
 			#Promove os candidatos
@@ -189,6 +214,9 @@ class Patrocinador
 			 false
 			)
 		end
+
+		@log.debug "#{Time.now} Total de contratações NM processadas:#{deficit_nm}"
+		@log.debug "#{Time.now} Total de contratações NU processadas:#{deficit_nm}"
 
 		return participantes
 
