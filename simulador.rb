@@ -3,10 +3,12 @@ require 'persistencia.rb'
 require 'array.rb'
 require 'patrocinador.rb'
 require 'plano_previdencia.rb'
+require 'participantes_helper.rb'
 
 class Simulador
 
 	include Log4r
+	include ParticipantesHelper
 
 	#Inicialização
 	def initialize(parametros)
@@ -26,7 +28,7 @@ class Simulador
 		ctrl_start_time = Time.now
 
 		#Cópia da lista de participantes para esta instância de execucão da simulação
-		participantes = @p.participantes
+		participantes = @p.participantes.clone
 
 		#Total inicial de participantes ativos
 		total_nm_ativos_inicial = participantes.count{|p| p.nivel == "Medio" and p.status == "Ativo"}
@@ -102,13 +104,17 @@ class Simulador
 				#participantes = patrocinador.processa_salarios(participantes)
 
 				@log.info "#{Time.now} Total atual de participantes: #{participantes.length}"
+                ativos = participantes_index(participantes,{:status=>"Ativo"}).length
+                desligados = participantes_index_complementar(participantes,{:status=>"Ativo"}).length
+                @log.info "#{Time.now} Total de participantes ativos:#{ativos}"
+                @log.info "#{Time.now} Total de participantes desligados:#{desligados}"
 				@log.info "#{Time.now} Finalizando processos de atualização dos participantes #{i}/#{@p.geral_horizonte}"
 
 			end
 
 			#Merge com parametros correntes e salva no banco de dados
 		 	h.merge!({:flows => cashFlow})
-			@log.info "#{Time.now} Salvando resultados de simulacao para combinacao #{i}/#{counter_combs}"
+			@log.info "#{Time.now} Salvando resultados de simulacao para combinacao #{cur_comb}/#{counter_combs}"
 			Persistencia.salva("cashflows", h)
 			cur_comb = cur_comb + 1
 

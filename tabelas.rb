@@ -122,13 +122,13 @@ class Tabelas
 		else 
 			l = @tabua_mortalidade_por_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
 		end
-		return l[:prob]
+		return l[:prob]/1000
 	end
 
 	#Retorna a probabilidade de entrada em invalidez de um determinado participante
 	def probabilidade_invalidez(p)
 		l = @tabua_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
-		return l[:prob]
+		return l[:prob]/1000
 	end
 
 end
