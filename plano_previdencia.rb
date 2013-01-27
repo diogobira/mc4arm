@@ -120,13 +120,14 @@ class PlanoPrevidencia
 		
 		participantes.map! do |p|
 			if p.vivo
-			conta_vivos = conta_vivos + 1
+                conta_vivos = conta_vivos + 1
 				if morreu(p)
 					p.vivo = false
 					p.status = "Desligado"
 					conta_mortes = conta_mortes + 1
 				end
 			end
+            p
 		end
 
 		@log.debug "#{Time.now} Total de mortes processadas:#{conta_mortes}/#{conta_vivos}"
@@ -151,6 +152,7 @@ class PlanoPrevidencia
 					conta_invalidos = conta_invalidos + 1
 				end
 			end
+            p
 		end
 
 		@log.debug "#{Time.now} Total de entradas em invalidez processadas:#{conta_invalidos}/#{conta_vivos_validos}"
