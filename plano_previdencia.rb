@@ -106,7 +106,7 @@ class PlanoPrevidencia
 				end
 		end
 
-		@log.debug "#{Time.now} Total de aposentadorias processadas:#{conta_aposentadorias}/#{ativos_indexes.lenght}"
+		@log.debug "#{Time.now} Total de aposentadorias processadas:#{conta_aposentadorias}/#{ativos_indexes.length}"
 
 		return participantes
 
@@ -175,14 +175,14 @@ class PlanoPrevidencia
 	def morreu(p)
 		prob_morte = @t.probabilidade_morte(p)
 		morto = Probability.random_sample(1, :Bernoulli, [prob_morte])
-		morto == 1 ? s = false : s = true
+		morto == 1 ? s = true : s = false
 	end
 
 	#Sorteia a invalidez de um determinado participante
 	def entrou_invalidez(p)
 		prob_invalidez = @t.probabilidade_invalidez(p)
 		invalido = Probability.random_sample(1, :Bernoulli, [prob_invalidez])
-		invalido == 1 ? s = false : s = true
+		invalido == 1 ? s = true : s = false
 	end
 
 end
