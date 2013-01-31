@@ -1,4 +1,5 @@
 require 'log4r'
+require 'yaml'
 require 'persistencia.rb'
 require 'array.rb'
 require 'patrocinador.rb'
@@ -45,7 +46,7 @@ class Simulador
 		@p.combinacoes.comprehend do |c|
 			
 			#Reinicia lista de participantes e dependentes
-			participantes = @p.participantes
+			participantes = Marshal.load(Marshal.dump(@p.participantes))
 			#dependentes
 
 			@log.info "#{Time.now} Simulando combinacao #{cur_comb}/#{counter_combs}"
@@ -104,10 +105,10 @@ class Simulador
 				#participantes = patrocinador.processa_salarios(participantes)
 
 				@log.info "#{Time.now} Total atual de participantes: #{participantes.length}"
-                ativos = participantes_index(participantes,{:status=>"Ativo"}).length
-                desligados = participantes_index_complementar(participantes,{:status=>"Ativo"}).length
-                @log.info "#{Time.now} Total de participantes ativos:#{ativos}"
-                @log.info "#{Time.now} Total de participantes desligados:#{desligados}"
+        ativos = participantes_index(participantes,{:status=>"Ativo"}).length
+        desligados = participantes_index_complementar(participantes,{:status=>"Ativo"}).length
+        @log.info "#{Time.now} Total de participantes ativos:#{ativos}"
+        @log.info "#{Time.now} Total de participantes desligados:#{desligados}"
 				@log.info "#{Time.now} Finalizando processos de atualização dos participantes #{i}/#{@p.geral_horizonte}"
 
 			end

@@ -1,5 +1,8 @@
 module Persistencia
-    require 'mongo/driver'
+
+		#require 'rubygems'
+    #require 'mongo/driver'
+		require 'mongo'
     require 'yaml'
    
     ARQUIVO = "env.yml"

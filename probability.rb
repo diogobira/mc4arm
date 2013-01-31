@@ -1,5 +1,8 @@
 module Probability
-    require 'RSRuby'
+
+    #require 'RSRuby'
+		require 'rubygems'
+		require 'rsruby'
 
     @R = RSRuby.instance
 
