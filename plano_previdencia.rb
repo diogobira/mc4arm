@@ -45,7 +45,7 @@ class PlanoPrevidencia
 		c = f[:f1]*sc + f[:f2]*(sc-tinss/2) + f[:f3]*(sc-tinss)
 		case p.status
 			when "Ativo"
-				contribuicao_mensal = c * (1-@previdencia_tx_adm_ativos)				
+				contribuicao_mensal = c * (1-@previdencia_tx_adm_ativos/100)				
 			when "Desligado"
 				contribuicao_mensal = 0
 		end
@@ -57,7 +57,7 @@ class PlanoPrevidencia
 	def beneficio_anual(participante)
 		p = participante
 		b = p.beneficio 
-		beneficio_mensal = b * (1-@previdencia_tx_adm_aposentados)					
+		beneficio_mensal = b * (1-@previdencia_tx_adm_aposentados/100)					
 		beneficio_anual = beneficio_mensal * @previdencia_qtd_pagamentos_ano
 		return beneficio_anual
 	end

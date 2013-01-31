@@ -30,6 +30,20 @@ module ParticipantesHelper
 		indexes = participantes_index(participantes,{:status=>"Desligado"})	
 	end
 
+	def participantes_vivos(participantes)
+	end
+
+	def participantes_invalidos(participantes)
+	end
+
+
+	def participantes_resumo(participantes)
+		resumo = {
+			:ativos = participantes_ativos(participantes).length,	
+			:desligados = participantes_desligados(participantes).length
+		}
+		return resumo
+	end
 
 
 end

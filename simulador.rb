@@ -51,8 +51,9 @@ class Simulador
 
 			@log.info "#{Time.now} Simulando combinacao #{cur_comb}/#{counter_combs}"
 
-			#Array de saída
+			#Arrays de saída
 			cashFlow = Array.new
+			participantesFlow = Array.new
 
 			#Hash com parametros do loop corrente	
 			h = Hash.new
@@ -74,6 +75,16 @@ class Simulador
 			(0...@p.geral_horizonte).each do |i|
 
 				@log.info "#{Time.now} Simulando ano #{i}/#{@p.geral_horizonte}"
+
+				#Obtem resumo das quantidades de participantes
+				r = participantes_resumo(participantes)
+				@log.info "#{Time.now} Total atual de participantes: #{participantes.length}"
+        @log.info "#{Time.now} Total de participantes ativos:#{r[:ativos]}"
+        @log.info "#{Time.now} Total de participantes desligados:#{r[:desligados]}"
+
+				#Atualiza array de fluxo de participantes
+				fluxo_participantes_ano_corrente = r.merge!({:ano => @anosimulacao})
+				participantesFlow << fluxo_participantes_ano_corrente
 		
 				#Atualiza ano corrente da simulação
 				@anosimulacao = @anoatual + i
@@ -104,11 +115,6 @@ class Simulador
 				participantes = patrocinador.processa_contratacoes(participantes)
 				#participantes = patrocinador.processa_salarios(participantes)
 
-				@log.info "#{Time.now} Total atual de participantes: #{participantes.length}"
-        ativos = participantes_index(participantes,{:status=>"Ativo"}).length
-        desligados = participantes_index_complementar(participantes,{:status=>"Ativo"}).length
-        @log.info "#{Time.now} Total de participantes ativos:#{ativos}"
-        @log.info "#{Time.now} Total de participantes desligados:#{desligados}"
 				@log.info "#{Time.now} Finalizando processos de atualização dos participantes #{i}/#{@p.geral_horizonte}"
 
 			end
