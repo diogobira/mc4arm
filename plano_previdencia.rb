@@ -70,8 +70,7 @@ class PlanoPrevidencia
 	def processa_idade(participantes)
 		participantes.map! do |p| 	
 			p.idade = p.idade + 1
-			#p.dependentes.map! {|d| d.idade= d.idade + 1}
-            p
+      p
 		end
 		return participantes
 	end
@@ -123,11 +122,9 @@ class PlanoPrevidencia
 			if p.vivo
         conta_vivos = conta_vivos + 1
 				if morreu(p)
-					#Atualiza flags
 					p.vivo = false
 					p.status = "Desligado"
 					conta_mortes = conta_mortes + 1
-					#Cria dependentes
 					cria_dependentes(p)
 				end
 			end

@@ -16,8 +16,8 @@ class Tabelas
 
 	def initialize(h)
 		@tabela_salarial = load_tabela(h[:patrocinador_tabela_salarial])
-		@tabela_ats = load_tabela(h[:patrocinador_tabela_ats])
-		@tabela_contribuicao = load_tabela(h[:previdencia_tabela_contribuicao])
+		@tabela_ats = load_tabela_ats(h[:patrocinador_tabela_ats])
+		@tabela_contribuicao = load_tabela_contribuicao(h[:previdencia_tabela_contribuicao])
 		@tabela_joia = load_tabela(h[:previdencia_tabela_joia])
 		@tabela_funcoes = load_tabela(h[:patrocinador_tabela_funcoes])
 		@tabua_mortalidade = load_tabua(h[:previdencia_tabua_mortalidade])
@@ -74,7 +74,8 @@ class Tabelas
 
 	#Retorna o adicional por tempo de serviço do participante
 	def ats(p)
-		a = @tabela_ats.detect {|s| s[:quadro] == p.quadro and s[:tempo_empresa] == p.tempo_empresa}
+		#a = @tabela_ats.detect {|s| s[:quadro] == p.quadro and s[:tempo_empresa] == p.tempo_empresa}
+		a = @tabela_ats.detect(p.quadro,p.tempo_empresa)
 		return a[:ats]
 	end
 
@@ -98,12 +99,13 @@ class Tabelas
 	###########################################################################
 
 	def fatores_contribuicao(p)
-		fatores = @tabela_contribuicao.detect do |c| 
-			p.status==c[:status] and  
-			p.quadro==c[:quadro] and 
-			p.nivel==c[:nivel] and 		
-			p.classe==c[:classe]
-		end
+		#fatores = @tabela_contribuicao.detect do |c| 
+		#	p.status==c[:status] and  
+		#	p.quadro==c[:quadro] and 
+		#	p.nivel==c[:nivel] and 		
+		#	p.classe==c[:classe]
+		#end
+		fatores = @tabela_contribuicao.detect(p.status,p.quadro,p.nivel,p.classe)
 		return fatores
 	end
 

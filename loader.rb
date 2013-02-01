@@ -2,6 +2,8 @@ require 'csv'
 require 'participante.rb'
 require 'string.rb'
 require 'tabua.rb'
+require 'tabela_contribuicao.rb'
+require 'tabela_ats.rb'
 
 module Loader
 
@@ -33,12 +35,24 @@ module Loader
 	end
 
 	def load_tabua(arquivo)
-		#tabua = csv2hashes(arquivo)
 		array = csv2hashes(arquivo)
 		tabua = Tabua.new
 		tabua.load(array)
 		return tabua
 	end
 
+	def load_tabela_contribuicao(arquivo)
+		array = csv2hashes(arquivo)
+		tabela = TabelaContribuicao.new
+		tabela.load(array)
+		return tabela
+	end
+
+	def load_tabela_ats(arquivo)
+		array = csv2hashes(arquivo)
+		tabela = TabelaAts.new
+		tabela.load(array)
+		return tabela
+	end
 
 end
