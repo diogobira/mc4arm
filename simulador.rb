@@ -29,7 +29,8 @@ class Simulador
 		ctrl_start_time = Time.now
 
 		#Cópia da lista de participantes para esta instância de execucão da simulação
-		participantes = @p.participantes.clone
+        participantes = @p.participantes
+		participantes_dump = Marshal.dump(participantes)
 
 		#Total inicial de participantes ativos
 		total_nm_ativos_inicial = participantes.count{|p| p.nivel == "Medio" and p.status == "Ativo"}
@@ -39,14 +40,14 @@ class Simulador
 		#Total de Combinacoes e de participantes
 		counter_combs = @p.combinacoes.map{|x| x.length}.reduce(:*)
 		@log.info "#{Time.now} Total de combinacoes: #{counter_combs}"
-		@log.info "#{Time.now} Total inicial de participantes: #{participantes.length}"
+		@log.info "#{Time.now} Total inicial de participantes: #{@p.participantes.length}"
 
 		#Loop em todas as combinações de parâmetros	
 		cur_comb = 1	
 		@p.combinacoes.comprehend do |c|
 			
 			#Reinicia lista de participantes e dependentes
-			participantes = Marshal.load(Marshal.dump(@p.participantes))
+			participantes = Marshal.load(participantes_dump)
 			#dependentes
 
 			@log.info "#{Time.now} Simulando combinacao #{cur_comb}/#{counter_combs}"
