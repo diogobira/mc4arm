@@ -121,14 +121,17 @@ class PlanoPrevidencia
 		
 		participantes.map! do |p|
 			if p.vivo
-                conta_vivos = conta_vivos + 1
+        conta_vivos = conta_vivos + 1
 				if morreu(p)
+					#Atualiza flags
 					p.vivo = false
 					p.status = "Desligado"
 					conta_mortes = conta_mortes + 1
+					#Cria dependentes
+					cria_dependentes(p)
 				end
 			end
-            p
+      p
 		end
 
 		@log.debug "#{Time.now} Total de mortes processadas:#{conta_mortes}/#{conta_vivos}"
@@ -183,6 +186,14 @@ class PlanoPrevidencia
 		prob_invalidez = @t.probabilidade_invalidez(p)
 		invalido = Probability.random_sample(1, :Bernoulli, [prob_invalidez])
 		invalido == 1 ? s = true : s = false
+	end
+
+	####################################################################
+	#Métodos de apoio a manipulação de dependentes
+	####################################################################
+
+	#Cria dependentes para um participante	
+	def cria_dependentes(p)
 	end
 
 end

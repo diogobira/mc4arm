@@ -10,7 +10,7 @@ class Tabelas
 	attr_accessor :tabela_joia
 	attr_accessor :tabela_funcoes
 	attr_accessor :tabua_mortalidade
-    attr_accessor :tabua_mortalidade_por_invalidez
+  attr_accessor :tabua_mortalidade_por_invalidez
 	attr_accessor :tabua_invalidez
 
 
@@ -118,16 +118,19 @@ class Tabelas
 	#Retorna a probabilidade de morte de um determinado participante
 	def probabilidade_morte(p)
 		if !(p.invalido)
-			l = @tabua_mortalidade.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
+			#l = @tabua_mortalidade.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
+			l = @tabua_mortalidade.detect(p.sexo, p.idade)
 		else 
-			l = @tabua_mortalidade_por_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
+			#l = @tabua_mortalidade_por_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
+			l = @tabua_mortalidade_por_invalidez.detect(p.sexo, p.idade)
 		end
 		return l[:prob]/1000
 	end
 
 	#Retorna a probabilidade de entrada em invalidez de um determinado participante
 	def probabilidade_invalidez(p)
-		l = @tabua_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
+		#l = @tabua_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
+		l = @tabua_invalidez.detect(p.sexo,p.idade)
 		return l[:prob]/1000
 	end
 
