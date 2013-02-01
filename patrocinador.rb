@@ -42,7 +42,7 @@ class Patrocinador
 			p.tempo_empresa+=1 if p.status == "Ativo" 
 			p
 		end
-		@log.debug "#{Time.now} Tempo de empresa processado para os participantes ativos"
+	#	@log.debug "#{Time.now} Tempo de empresa processado para os participantes ativos"
 		return participantes
 	end
 
@@ -82,8 +82,8 @@ class Patrocinador
 			nu_promovidos = nu_promovidos + 1
 		end
 
-		@log.debug "#{Time.now} Total de promoções NM processadas:#{nm_promovidos}/#{total_nm}"
-		@log.debug "#{Time.now} Total de promoções NU processadas:#{nu_promovidos}/#{total_nu}"
+	#	@log.debug "#{Time.now} Total de promoções NM processadas:#{nm_promovidos}/#{total_nm}"
+	#	@log.debug "#{Time.now} Total de promoções NU processadas:#{nu_promovidos}/#{total_nu}"
 
 		return participantes
 
@@ -102,7 +102,7 @@ class Patrocinador
 			end
       p
 		end
-		@log.debug "#{Time.now} Atualizando salários dos participantes ativos"
+	#	@log.debug "#{Time.now} Atualizando salários dos participantes ativos"
 		return participantes
 	end
 
@@ -136,7 +136,7 @@ class Patrocinador
 			vagas_ocupadas = ocupantes.length			
 			vagas_disponiveis = vagas.to_i - vagas_ocupadas	
 
-			@log.debug "#{Time.now} Total de vagas disponíveis para #{f[:nome]}: #{vagas_disponiveis}"
+	#		@log.debug "#{Time.now} Total de vagas disponíveis para #{f[:nome]}: #{vagas_disponiveis}"
 
 			#Embaralha os candidatos para simular aleatoriedade na promoção
 			candidatos.shuffle!
@@ -215,8 +215,8 @@ class Patrocinador
 			)
 		end
 
-		@log.debug "#{Time.now} Total de contratações NM processadas:#{deficit_nm}"
-		@log.debug "#{Time.now} Total de contratações NU processadas:#{deficit_nm}"
+	#	@log.debug "#{Time.now} Total de contratações NM processadas:#{deficit_nm}"
+	#	@log.debug "#{Time.now} Total de contratações NU processadas:#{deficit_nm}"
 
 		return participantes
 

@@ -39,8 +39,8 @@ module ParticipantesHelper
 
 	def participantes_resumo(participantes)
 		resumo = {
-			:ativos = participantes_ativos(participantes).length,	
-			:desligados = participantes_desligados(participantes).length
+			:ativos => participantes_ativos(participantes).length,	
+			:desligados => participantes_desligados(participantes).length
 		}
 		return resumo
 	end

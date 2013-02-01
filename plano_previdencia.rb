@@ -106,7 +106,7 @@ class PlanoPrevidencia
 				end
 		end
 
-		@log.debug "#{Time.now} Total de aposentadorias processadas:#{conta_aposentadorias}/#{ativos_indexes.length}"
+	#	@log.debug "#{Time.now} Total de aposentadorias processadas:#{conta_aposentadorias}/#{ativos_indexes.length}"
 
 		return participantes
 
@@ -131,7 +131,7 @@ class PlanoPrevidencia
             p
 		end
 
-		@log.debug "#{Time.now} Total de mortes processadas:#{conta_mortes}/#{conta_vivos}"
+	#	@log.debug "#{Time.now} Total de mortes processadas:#{conta_mortes}/#{conta_vivos}"
 
 		return participantes
 
@@ -156,7 +156,7 @@ class PlanoPrevidencia
             p
 		end
 
-		@log.debug "#{Time.now} Total de entradas em invalidez processadas:#{conta_invalidos}/#{conta_vivos_validos}"
+	#	@log.debug "#{Time.now} Total de entradas em invalidez processadas:#{conta_invalidos}/#{conta_vivos_validos}"
 
 		return participantes
 
