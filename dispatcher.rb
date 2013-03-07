@@ -1,3 +1,4 @@
+$:.unshift('.')
 require 'parametros'
 require 'simulador'
 
