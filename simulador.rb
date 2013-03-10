@@ -5,6 +5,7 @@ require 'array.rb'
 require 'patrocinador.rb'
 require 'plano_previdencia.rb'
 require 'participantes_helper.rb'
+require 'digest/sha1'
 
 class Simulador
 
@@ -13,23 +14,34 @@ class Simulador
 
 	#Inicializacao
 	def initialize(parametros)
+
+		#Informações gerais sobre a simulação e ID da simulação
+		@sim_date = Time.now
+		@sim_description = "Simulações de Teste"
+		@sim_key = Digest::SHA1.hexdigest "#{@sim_date}"
+		@sim_info = {:date=> @sim_date, :description=> @sim_description, :sim_key=> @sim_key}
+
+		#Parametros de simulação
 		@p = parametros
 		@anoatual = Time.now.year
 		@anosimulacao = @anoatual
+	
+		#Configurações de logging
 		@log = Logger.new 'log'
 		@log.outputters = Outputter.stdout
+
 	end	
 
 	#Executa a simulacao
 	def executar
 	
-		@log.info "#{Time.now} Simulacao iniciada"
+		@log.info "#{Time.now} Simulacao iniciada (#{@sim_key})"
 
 		#Variáveis de controle da simulacao
 		ctrl_start_time = Time.now
 
 		#Cópia da lista de participantes para esta instância de execucao da simulacao
-        participantes = @p.participantes
+    participantes = @p.participantes
 		participantes_dump = Marshal.dump(participantes)
 
 		#Total inicial de participantes ativos
@@ -48,7 +60,6 @@ class Simulador
 			
 			#Reinicia lista de participantes e dependentes
 			participantes = Marshal.load(participantes_dump)
-			#dependentes
 
 			@log.info "#{Time.now} Simulando combinacao #{cur_comb}/#{counter_combs}"
 
@@ -122,6 +133,7 @@ class Simulador
 
 			#Merge com parametros correntes e salva no banco de dados
 		 	h.merge!({:flows => cashFlow})
+			h.merge!(@sim_info)
 			@log.info "#{Time.now} Salvando resultados de simulacao para combinacao #{cur_comb}/#{counter_combs}"
 			Persistencia.salva("cashflows", h)
 			cur_comb = cur_comb + 1

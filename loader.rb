@@ -4,6 +4,7 @@ require 'string.rb'
 require 'tabua.rb'
 require 'tabela_contribuicao.rb'
 require 'tabela_ats.rb'
+require 'tabela_fator_pensao.rb'
 
 module Loader
 
@@ -51,6 +52,13 @@ module Loader
 	def load_tabela_ats(arquivo)
 		array = csv2hashes(arquivo)
 		tabela = TabelaAts.new
+		tabela.load(array)
+		return tabela
+	end
+
+	def load_tabela_fator_pensao(arquivo)
+		array = csv2hashes(arquivo)
+		tabela = TabelaFatorPensao.new
 		tabela.load(array)
 		return tabela
 	end

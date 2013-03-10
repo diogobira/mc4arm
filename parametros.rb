@@ -81,9 +81,9 @@ class Parametros
 				if secao != "geral" and type != "Distribution"
 					simbolos_combinaveis << key.to_sym
 					valores_combinaveis << instance_variable_get("@#{key}")
-                else #Parâmetros não combináveis
-                    simbolos_nao_combinaveis << key.to_sym
-                    valores_nao_combinaveis << instance_variable_get("@#{key}")
+        else #Parâmetros não combináveis
+            simbolos_nao_combinaveis << key.to_sym
+            valores_nao_combinaveis << instance_variable_get("@#{key}")
 				end
 
 			end

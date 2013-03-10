@@ -1,5 +1,6 @@
 require 'probability.rb'
 require 'string.rb'
+require 'dependente.rb'
 
 class Participante
 
@@ -25,7 +26,9 @@ class Participante
 	attr_accessor :idade
 	attr_accessor :salario
 	attr_accessor :dependentes
-    attr_accessor :beneficio
+  attr_accessor :beneficio
+  attr_accessor :fator_pensao
+
 
 	#Inicialização
 	def initialize(h, arquivo=false)
@@ -50,7 +53,8 @@ class Participante
 			@idade = h[:idade]
 			@salario = h[:salario]
 			@beneficio = 0
-			#@dependentes = Probability.
+			@fator_pensao = nil
+			@dependentes = Array.new
 
 		else
 			h.each_pair {|key,value| instance_variable_set("@#{key}",value)} 			
@@ -74,7 +78,8 @@ class Participante
 			@idade = @idade.to_i
 			@salario = @salario.to_f
 			@beneficio = @beneficio.to_f
-			#@dependentes
+			@fator_pensao = nil
+			@dependentes = Array.new
 
 		end
 

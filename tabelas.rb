@@ -12,6 +12,8 @@ class Tabelas
 	attr_accessor :tabua_mortalidade
   attr_accessor :tabua_mortalidade_por_invalidez
 	attr_accessor :tabua_invalidez
+	attr_accessor :tabela_dependentes
+	attr_accessor :tabela_fator_pensao
 
 
 	def initialize(h)
@@ -19,10 +21,12 @@ class Tabelas
 		@tabela_ats = load_tabela_ats(h[:patrocinador_tabela_ats])
 		@tabela_contribuicao = load_tabela_contribuicao(h[:previdencia_tabela_contribuicao])
 		@tabela_joia = load_tabela(h[:previdencia_tabela_joia])
+		@tabela_fator_pensao = load_tabela_fator_pensao(h[:previdencia_tabela_fator_pensao])
 		@tabela_funcoes = load_tabela(h[:patrocinador_tabela_funcoes])
 		@tabua_mortalidade = load_tabua(h[:previdencia_tabua_mortalidade])
     @tabua_mortalidade_por_invalidez = load_tabua(h[:previdencia_tabua_mortalidade_por_invalidez])
 		@tabua_invalidez = load_tabua(h[:previdencia_tabua_invalidez])
+		@tabela_dependentes = load_tabela(h[:previdencia_tabela_dependentes])
 		@cap_nu = h[:previdencia_cap_nu]
 		@cap_nm = h[:previdencia_cap_nm]
 	end
@@ -134,6 +138,27 @@ class Tabelas
 		#l = @tabua_invalidez.detect {|t| p.sexo == t[:sexo] and p.idade == t[:idade]}
 		l = @tabua_invalidez.detect(p.sexo,p.idade)
 		return l[:prob]/1000
+	end
+
+	###########################################################################
+	#Métodos de acesso à tabela de dependentes
+	###########################################################################
+	def dados_dependentes(p)
+		h = {
+		:prob_casado => 1,
+		:prob_filho => 1,
+		:idade_cacula => 15,
+		:idade_conjuge => 50
+		}
+		return h
+	end
+
+	###########################################################################
+	#Métodos de acesso à tabela de fatores de pensão
+	###########################################################################
+	def fator_pensao(p)
+		f = @tabela_fator_pensao.detect(p.sexo,p.tempo_empresa)		
+		return f[:fator]	
 	end
 
 end
