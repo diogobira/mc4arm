@@ -1,20 +1,18 @@
-$:.unshift('.')
 require 'parametros'
 require 'simulador'
 
-arquivo_configuracoes = ARGV[0]
-quantidade_execucoes = ARGV[1].to_i
+class Dispatcher
 
-cashFlows = Array.new
+	def initialize(file,runtimes)
+		@p = Parametros.new(file)
+		@s = Simulador.new(@p)
+		@t = runtimes
+	end
 
-parametros = Parametros.new(arquivo_configuracoes)
+	def run
+		(1..@t).each do |i|
+			@s.executar
+		end
+	end
 
-
-s = Simulador.new(parametros)
-
-(1..quantidade_execucoes).each do |i|
-	#Thread.new { cashFlows << s.executar }
-    s.executar
 end
-
-

@@ -224,7 +224,8 @@ class PlanoPrevidencia
 		prob_casado = h[:prob_casado] 
 		prob_filho = h[:prob_filho]
 		idade_cacula = h[:idade_cacula] 
-		idade_conjuge = h[:idade_conjuge] 
+		#idade_conjuge = h[:idade_conjuge]
+		idade_conjuge = p.idade
 		
 		#Tenta gerar o conjuge
 		p.sexo == "M" ? sexo_conjuge = "F" : sexo_conjuge = "M"    
