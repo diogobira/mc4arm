@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+$:.unshift('.')
 
 ############################################################################
 # Informações Gerais
@@ -48,27 +48,27 @@ class MC4ARMOptionsParser
       opts.separator ""
 
 			#Modo de execucao
-      opts.on("-m","--mode MODE",["listar", "simular", "analisar"], "Selecione modo de execução (listar, simular, analisar)") do |m|
+      opts.on("-m","--mode MODE",["listar", "simular", "analisar"], "Selecione modo de execucao (listar, simular, analisar)") do |m|
         options.mode = m
       end
 
 			#Quantidade de execucoes
-      opts.on("-f","--parameter-file FILENAME", "Arquivo de parâmetros de simulação") do |filename|
+      opts.on("-f","--parameter-file FILENAME", "Arquivo de parametros de simulacao") do |filename|
         options.parameter_file = filename
       end
 
 			#Quantidade de execucoes
-      opts.on("-t","--run-times N", "Quantidade de execuções") do |n|
+      opts.on("-t","--run-times N", "Quantidade de execucoes") do |n|
         options.run_times = n
       end
 
 			#ID da simulacao a ser analisada
-      opts.on("-i","--id ID", "ID da simulação") do |id|
+      opts.on("-i","--id ID", "ID da simulacao") do |id|
         options.id = id
       end
 
 			#Diretório de saída dos resultados da simulação
-      opts.on("-d","--dir DIRECTORY", "Diretório de resultados da simulação") do |d|
+      opts.on("-d","--dir DIRECTORY", "Diretorio de resultados da simulacao") do |d|
         options.directory = d
       end
 
@@ -78,22 +78,22 @@ class MC4ARMOptionsParser
       end
 
 			#Gerar gráficos
-      opts.on("-c","--charts", "Gerar gráficos") do 
+      opts.on("-c","--charts", "Gerar graficos") do 
         options.charts = true
       end
 
 			#Nível de log
-      opts.on("-l","--log-level LEVEL", "Nível de log da simulação") do |d|
+      opts.on("-l","--log-level LEVEL", "Nivel de log da simulacao") do |d|
         options.log_level = d
       end
 
 			#Modo de paralelização
-      opts.on("-p","--paralelization-mode MODE",["thread", "ironIO"], "Modo de paralelização a ser usada (thread, ironIO)") do |p|
+      opts.on("-p","--paralelization-mode MODE",["thread", "ironIO"], "Modo de paralelizacao a ser usada (thread, ironIO)") do |p|
         options.paralelization_mode = p
       end
 
       # Lista de emails para notificação
-      opts.on("--mail mail1,mail2,mail3", Array, "Lista de emails para notificação") do |list|
+      opts.on("--mail mail1,mail2,mail3", Array, "Lista de emails para notificacao") do |list|
         options.notification_mail = list
       end
 
@@ -105,7 +105,7 @@ class MC4ARMOptionsParser
       end
 
 			#Versão do programa
-     opts.on_tail("-v", "--version", "Exibe a versão do programa") do
+     opts.on_tail("-v", "--version", "Exibe a versao do programa") do
         puts OptionParser::Version.join('.')
 				puts ""
         exit
