@@ -1,3 +1,6 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 $:.unshift('.')
 
 ############################################################################
@@ -47,13 +50,13 @@ class MC4ARMOptionsParser
       opts.banner = "Usage: mc4arm.rb [options]"
       opts.separator ""
 
-			#Modo de execucao
-      opts.on("-m","--mode MODE",["listar", "simular", "analisar"], "Selecione modo de execucao (listar, simular, analisar)") do |m|
+			#Modo de execução
+      opts.on("-m","--mode MODE",["listar", "simular", "analisar"], "Selecione modo de execução (listar, simular, analisar)") do |m|
         options.mode = m
       end
 
 			#Quantidade de execucoes
-      opts.on("-f","--parameter-file FILENAME", "Arquivo de parametros de simulacao") do |filename|
+      opts.on("-f","--parameter-file FILENAME", "Arquivo de parametros de simulação") do |filename|
         options.parameter_file = filename
       end
 
@@ -62,13 +65,13 @@ class MC4ARMOptionsParser
         options.run_times = n
       end
 
-			#ID da simulacao a ser analisada
-      opts.on("-i","--id ID", "ID da simulacao") do |id|
+			#ID da simulação a ser analisada
+      opts.on("-i","--id ID", "ID da simulação") do |id|
         options.id = id
       end
 
 			#Diretório de saída dos resultados da simulação
-      opts.on("-d","--dir DIRECTORY", "Diretorio de resultados da simulacao") do |d|
+      opts.on("-d","--dir DIRECTORY", "Diretório de resultados da simulação") do |d|
         options.directory = d
       end
 
@@ -83,17 +86,17 @@ class MC4ARMOptionsParser
       end
 
 			#Nível de log
-      opts.on("-l","--log-level LEVEL", "Nivel de log da simulacao") do |d|
+      opts.on("-l","--log-level LEVEL", "Nivel de log da simulação") do |d|
         options.log_level = d
       end
 
 			#Modo de paralelização
-      opts.on("-p","--paralelization-mode MODE",["thread", "ironIO"], "Modo de paralelizacao a ser usada (thread, ironIO)") do |p|
+      opts.on("-p","--paralelization-mode MODE",["thread", "ironIO"], "Modo de paralelização a ser usada (thread, ironIO)") do |p|
         options.paralelization_mode = p
       end
 
       # Lista de emails para notificação
-      opts.on("--mail mail1,mail2,mail3", Array, "Lista de emails para notificacao") do |list|
+      opts.on("--mail mail1,mail2,mail3", Array, "Lista de emails para notificação") do |list|
         options.notification_mail = list
       end
 
