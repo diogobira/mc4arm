@@ -20,6 +20,7 @@ require 'parametros'
 require 'simulador'
 require 'dispatcher'
 require 'browser'
+require 'analyzer'
 
 ############################################################################
 # Opções 
@@ -139,6 +140,8 @@ case options.mode
 		browser.listar_simulacoes
 
 	when "analisar"
+		analyzer = Analyzer.new()
+		analyzer.teste
 
 	else
 

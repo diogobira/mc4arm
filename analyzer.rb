@@ -1,6 +1,9 @@
+require 'lib/finance'
 require 'ostruct'
 
 class Analyzer
+
+	include Finance
 
 	def initialize
 	end
@@ -12,6 +15,14 @@ class Analyzer
 	############################################################################
 	# Métodos de apoio
 	############################################################################
+
+	def teste
+		@transactions = []
+		@transactions << Transaction.new(-1000, :date => Time.utc(1985,01,01))
+		@transactions << Transaction.new(  600, :date => Time.utc(1990,01,01))
+		@transactions << Transaction.new(  600, :date => Time.utc(1995,01,01))
+		puts @transactions.xnpv(0.6)	
+	end
 
 	#Recupera os arrays de fluxo de caixa para uma dada simulação e combinação de parâmetros
 	def get_cashflows(simulation_id, combination_id)
