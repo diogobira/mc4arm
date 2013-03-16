@@ -36,8 +36,10 @@ class MC4ARMOptionsParser
     # Opções default
 		data = Time.now
     options = OpenStruct.new
+		options.log_file = "/tmp/mc4arm.log"
 		options.log_level = "INFO"
-		options.directory = "resultados_"
+		options.simulation_directory = "/tmp/simulacoes"
+		options.analysis_directory = "/tmp/analises"
 		options.parameter_file = "parametros.yml"
 		options.run_times = 1
 		options.notification_mail = ["diogobira@gmail.com"]
@@ -63,21 +65,21 @@ class MC4ARMOptionsParser
 
 			#Quantidade de execucoes
       opts.on("-t","--run-times N", "Quantidade de execucoes") do |n|
-        options.run_times = n
+        options.run_times = n.to_i
       end
 
 			#ID da simulação a ser analisada
-      opts.on("-i","--id ID", "ID da simulação") do |id|
-        options.id = id
+      opts.on("-k","--key KEY", "Identificação da simulação") do |key|
+        options.key = key
       end
 
-			#Diretório de saída dos resultados da simulação
-      opts.on("-d","--dir DIRECTORY", "Diretório de resultados da simulação") do |d|
-        options.directory = d
+			#Diretório de saída dos resultados da análise da simulação
+      opts.on("--analysis-dir DIRECTORY", "Diretório de resultados da análise da simulação") do |d|
+        options.analysis_directory = d
       end
 
-			#Diretório de saída dos resultados da simulação
-      opts.on("-o","--output-format FORMAT", ["csv","xml","html"], "Formato dos resultados (csv, xml, html)") do |d|
+			#Formato de saída dos resultados da simulação
+      opts.on("-o","--output-format FORMAT", ["db", "csv","xml","html"], "Formato dos resultados (db, csv, xml, html)") do |d|
         options.output_format = d
       end
 
@@ -129,6 +131,7 @@ end
 
 options = MC4ARMOptionsParser.parse(ARGV)
 
+#Modo de execução do Programa
 case options.mode
 
 	when "simular"
@@ -140,7 +143,8 @@ case options.mode
 		browser.listar_simulacoes
 
 	when "analisar"
-		analyzer = Analyzer.new()
+		Dir.mkdir(options.analysis_directory + "/#{options.key}_#{Time.now.strftime("%Y%m%d_%Hh%Mmin")}")
+		analyzer = Analyzer.new(options.key)
 		analyzer.teste
 
 	else

@@ -8,5 +8,10 @@ class Array
 		end
 		result
 	end
+
+	def mean
+		self.reduce(:+).to_f / self.size
+	end
+
 end
 

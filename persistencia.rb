@@ -24,7 +24,7 @@ module Persistencia
     end
 
     def Persistencia.le(nome_col, criterios)
-        @db[nome_col].all(criterios) do |doc|
+        @db[nome_col].find(criterios) do |doc|
             yield doc
         end
     end

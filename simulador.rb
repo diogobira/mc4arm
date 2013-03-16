@@ -21,7 +21,7 @@ class Simulador
 		#Informações gerais sobre a simulação e ID da simulação
 		@sim_date = Time.now
 		@sim_description = "Simulações de Teste"
-		@sim_key = Digest::SHA1.hexdigest "#{@sim_date}"
+		@sim_key = Time.now.strftime("%Y%m%d%H%M%S")
 		@sim_info = {:date=> @sim_date, :description=> @sim_description, :sim_key=> @sim_key}
 
 		#Parametros de simulação
