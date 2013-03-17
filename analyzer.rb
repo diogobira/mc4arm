@@ -22,6 +22,7 @@ class Analyzer
 	def teste
 		cashflows = get_cashflows(@sim_key, {:previdencia_qtd_contribuicoes_ano => 13})
 		cashflows.each do |cf|
+			puts mean_npvs_at_t(cf, [0.1,0.05])
 		end
 	end
 
@@ -63,9 +64,9 @@ class Analyzer
 		return cash.npv(rate)			
 	end
 
-	#Calcula o valor em caixa em um cada instante do tempo para um dado fluxo de caixa
-	def cash_availability(cashflow, rate)
-		availabilities = Array.new
+	#Calcula o NPV em um cada instante do tempo para um dado fluxo de caixa
+	def npvs_at_t(cashflow, rate)
+		npvs = Array.new
 		horizonte = cashflow.years.size
 		(1..horizonte).each do |t|
 			a = OpenStruct.new
@@ -74,10 +75,10 @@ class Analyzer
 			npv_0_t = cash_until_t.npv(rate)
 			npv_t_end = cash_after_t.npv(rate)
 			a.t = cashflow.years[t] 
-			a.cash = npv_0_t * (1+rate)**t
-			availabilities << a
+			a.cash = npv_0_t * (1+rate)**t + npv_t_end
+			npvs << a
 		end
-		return availabilities
+		return npvs
 	end
 
 	#Calula o NPV de cada um dos casflows de uma lista
@@ -103,21 +104,21 @@ class Analyzer
 	end
 
 	#Retorna um array com a disponibilidade media de caixa em ada instante do tempo dada uma lista de taxas de desconto
-	def mean_cash_availability(cashflow, rates)
-		mca_list = Array.new	
-		ca_list = Array.new 
-		rates.each {|r| ca_list << cash_availability(cashflow, r)}
+	def mean_npvs_at_t(cashflow, rates)
+		mnpv_list = Array.new	
+		npvs_list = Array.new 
+		rates.each {|r| npvs_list << npvs_at_t(cashflow, r)}
 		horizonte = cashflow.years.size
 		(1..horizonte).each do |t|
 			a = OpenStruct.new
-			ca_list_at_t = Array.new
-			ca_list.each do |ca|
-				ca_list_at_t << ca[t-1].cash
+			npvs_list_at_t = Array.new
+			npvs_list.each do |ca|
+				npvs_list_at_t << ca[t-1].cash
 			end
-			a.cash, a.t = ca_list_at_t.mean, cashflow.years[t-1]
-			mca_list << a
+			a.cash, a.t = npvs_list_at_t.mean, cashflow.years[t-1]
+			mnpv_list << a
 		end
-		return mca_list
+		return mnpv_list
 	end
 
 	############################################################################

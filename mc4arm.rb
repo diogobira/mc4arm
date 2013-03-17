@@ -139,8 +139,8 @@ case options.mode
 		dispatcher.run
 
 	when "listar"
-		browser = Browser.new()
-		browser.listar_simulacoes
+		browser = Browser.new
+		browser.listar_simulacoes()
 
 	when "analisar"
 		Dir.mkdir(options.analysis_directory + "/#{options.key}_#{Time.now.strftime("%Y%m%d_%Hh%Mmin")}")
