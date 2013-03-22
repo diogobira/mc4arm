@@ -10,9 +10,12 @@ class Dispatcher
 	end
 
 	def run
+		threads = Array.new
 		(1..@t).each do |i|
+			#threads << Thread.new {@s.executar}
 			@s.executar
 		end
+		#threads.each {|thr| thr.join}
 	end
 
 end

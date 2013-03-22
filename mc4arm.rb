@@ -27,9 +27,6 @@ require 'analyzer'
 ############################################################################
 class MC4ARMOptionsParser
 
-  CODES = %w[iso-2022-jp shift_jis euc-jp utf8 binary]
-  CODE_ALIASES = { "jis" => "iso-2022-jp", "sjis" => "shift_jis" }
-
   # Return a structure describing the options.
   def self.parse(args)
 
@@ -38,10 +35,11 @@ class MC4ARMOptionsParser
     options = OpenStruct.new
 		options.log_file = "/tmp/mc4arm.log"
 		options.log_level = "INFO"
-		options.simulation_directory = "/tmp/simulacoes"
-		options.analysis_directory = "/tmp/analises"
+		options.simulation_directory = "tmp/simulacoes"
+		options.analysis_directory = "tmp/analises"
 		options.parameter_file = "parametros.yml"
 		options.run_times = 1
+		options.initial_wealth = 0
 		options.notification_mail = ["diogobira@gmail.com"]
 		options.paralelization_mode = "thread"
 		options.output_format = "csv"
@@ -67,6 +65,12 @@ class MC4ARMOptionsParser
       opts.on("-t","--run-times N", "Quantidade de execucoes") do |n|
         options.run_times = n.to_i
       end
+
+			#Riqueza inicial do plano
+      opts.on("-w","--initial-wealth W", "Riqueza inicial do plano") do |w|
+        options.initial_wealth = w.to_i
+      end
+
 
 			#ID da simulação a ser analisada
       opts.on("-k","--key KEY", "Identificação da simulação") do |key|
@@ -143,7 +147,7 @@ case options.mode
 		browser.listar_simulacoes()
 
 	when "analisar"
-		Dir.mkdir(options.analysis_directory + "/#{options.key}_#{Time.now.strftime("%Y%m%d_%Hh%Mmin")}")
+		#Dir.mkdir(options.analysis_directory + "/#{options.key}_#{Time.now.strftime("%Y%m%d_%Hh%Mmin")}")
 		analyzer = Analyzer.new(options.key)
 		analyzer.teste
 

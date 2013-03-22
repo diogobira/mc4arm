@@ -69,5 +69,13 @@ module Probability
         samples = dist_func.call(num_samples, dist_params)
 	end
 
+	######################################################
+	#Funções que preparam dados para histogramas
+	######################################################
+
+	def Probability.prepare_histogram_data(samples,options={})	
+		hd = Array.new
+		return hd
+	end
 
 end
