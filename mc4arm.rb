@@ -20,7 +20,8 @@ require 'parametros'
 require 'simulador'
 require 'dispatcher'
 require 'browser'
-require 'analyzer'
+
+#require 'analyzer'
 
 ############################################################################
 # Opções 
@@ -37,7 +38,7 @@ class MC4ARMOptionsParser
 		options.log_level = "INFO"
 		options.simulation_directory = "tmp/simulacoes"
 		options.analysis_directory = "tmp/analises"
-		options.parameter_file = "parametros.yml"
+		options.parameter_file = "parametros.xlsx"
 		options.run_times = 1
 		options.initial_wealth = 0
 		options.notification_mail = ["diogobira@gmail.com"]

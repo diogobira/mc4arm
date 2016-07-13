@@ -12,9 +12,10 @@ class Patrocinador
 	include ParticipantesHelper
 
 	def initialize(h)
+	
 		#Atributos simples
-		h.each_pair {|k,v| instance_variable_set("@#{k}",v)} 			
-
+		h.each_pair {|k,v| instance_variable_set("@#{k}",v)}
+		
 		#Tabelas e Tábuas
 		@t = Tabelas.new(h)		
 
@@ -135,8 +136,12 @@ class Patrocinador
 			#Calculo de vagas disponiveis
 			vagas_ocupadas = ocupantes.length			
 			vagas_disponiveis = vagas.to_i - vagas_ocupadas	
+			
+			if vagas_disponiveis < 0
+				next
+			end
 
-	#		@log.debug "#{Time.now} Total de vagas disponíveis para #{f[:nome]}: #{vagas_disponiveis}"
+			#@log.debug "#{Time.now} Total de vagas disponíveis para #{f[:nome]}: #{vagas_disponiveis}"
 
 			#Embaralha os candidatos para simular aleatoriedade na promoção
 			candidatos.shuffle!
@@ -157,62 +162,68 @@ class Patrocinador
 
 	#Roda processo de contratações
 	def processa_contratacoes(participantes)
-
+	
+		
+		
 		#Ativos por nível
 		total_ativos_nm = participantes_index(participantes,{:status=>"Ativo",:nivel=>"Medio"}).length
 		total_ativos_nu = participantes_index(participantes,{:status=>"Ativo",:nivel=>"Superior"}).length
-
+		
 		#Déficit por nível com relação aos totais iniciais
 		deficit_nm = @total_nm_ativos_inicial - total_ativos_nm
 		deficit_nu = @total_nu_ativos_inicial - total_ativos_nu
 
 		#Déficit que serão cobertos
-		#deficit_nm = deficit_nm * Probability.
-		#deficit_nu = deficit_nu * Probability.
+		deficit_nm = 0
+		deficit_nu = 0
 
 		#Novos participantes
-		(1..deficit_nm).each do |i| 
-			participantes << Participante.new(
-			 {
-				:nivel=>"Medio", 	
-				:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Medio"),
-				:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Medio"),
-				:quadro=>@patrocinador_quadro_entrantes,
-				:sexo=>(Probability.random_sample(
-									1, 
-									@patrocinador_prc_homens_entrantes[:distr], 
-									@patrocinador_prc_homens_entrantes[:params]
-								) == 1) ? "M" : "F",
-			    :idade=>Probability.random_sample(
-									1, 
-									@patrocinador_idade_entrantes[:distr], 
-									@patrocinador_idade_entrantes[:params]
-                                ).to_i
-				}, 
-				false
-			)
+		if deficit_nm > 0
+			(1..deficit_nm).each do |i| 
+				participantes << Participante.new(
+				 {
+					:nivel=>"Medio", 	
+					:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Medio"),
+					:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Medio"),
+					:quadro=>@patrocinador_quadro_entrantes,
+					:sexo=>(Probability.random_sample(
+										1, 
+										@patrocinador_prc_homens_entrantes[:distr], 
+										@patrocinador_prc_homens_entrantes[:params]
+									) == 1) ? "M" : "F",
+					:idade=>Probability.random_sample(
+										1, 
+										@patrocinador_idade_entrantes[:distr], 
+										@patrocinador_idade_entrantes[:params]
+									).to_i
+					}, 
+					false
+				)
+			end
 		end
 
-		(1..deficit_nu).each do |i| 
-			participantes << Participante.new(
-			 {
-				:nivel=>"Superior", 
-				:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Superior"),
-				:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Superior"),
-				:quadro=>@patrocinador_quadro_entrantes,
-				:sexo=>(Probability.random_sample(
-									1, 
-									@patrocinador_prc_homens_entrantes[:distr], 
-									@patrocinador_prc_homens_entrantes[:params]
-								) == 1) ? "M" : "F",
-			    :idade=>Probability.random_sample(
-									1, 
-									@patrocinador_idade_entrantes[:distr], 
-									@patrocinador_idade_entrantes[:params]
-								).to_i
-			 }, 
-			 false
-			)
+		if deficit_nu > 0 
+			(1..deficit_nu).each do |i| 
+				participantes << Participante.new(
+				 {
+					:nivel=>"Superior", 
+					:classe=>@t.classe_inicial(@patrocinador_quadro_entrantes,"Superior"),
+					:salario=>@t.salario_inicial(@patrocinador_quadro_entrantes,"Superior"),
+					:quadro=>@patrocinador_quadro_entrantes,
+					:sexo=>(Probability.random_sample(
+										1, 
+										@patrocinador_prc_homens_entrantes[:distr], 
+										@patrocinador_prc_homens_entrantes[:params]
+									) == 1) ? "M" : "F",
+					:idade=>Probability.random_sample(
+										1, 
+										@patrocinador_idade_entrantes[:distr], 
+										@patrocinador_idade_entrantes[:params]
+									).to_i
+				 }, 
+				 false
+				)
+			end
 		end
 
 	#	@log.debug "#{Time.now} Total de contratações NM processadas:#{deficit_nm}"

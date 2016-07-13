@@ -44,7 +44,7 @@ class Simulador
 		ctrl_start_time = Time.now
 
 		#Cópia da lista de participantes para esta instância de execucao da simulacao
-    participantes = @p.participantes
+		participantes = @p.participantes
 		participantes_dump = Marshal.dump(participantes)
 
 		#Total inicial de participantes ativos
@@ -53,28 +53,28 @@ class Simulador
 		totais_ativos = {:total_nm_ativos_inicial=>total_nm_ativos_inicial, :total_nu_ativos_inicial=>total_nu_ativos_inicial}
 
 		#Total de Combinacoes e de participantes
-		counter_combs = @p.combinacoes.map{|x| x.length}.reduce(:*)
+		#counter_combs = @p.combinacoes.map{|x| x.length}.reduce(:*)
+		counter_combs = @p.parametros.count
 		@log.info "#{Time.now} Total de combinacoes: #{counter_combs}"
 		@log.info "#{Time.now} Total inicial de participantes: #{@p.participantes.length}"
-
+		
 		#Loop em todas as combinacões de parâmetros	
-		cur_comb = 1	
-		@p.combinacoes.comprehend do |c|
+		(1..counter_combs).each do |i|
 			
 			#Reinicia lista de participantes e dependentes
 			participantes = Marshal.load(participantes_dump)
 
-			@log.info "#{Time.now} Simulando combinacao #{cur_comb}/#{counter_combs}"
+			@log.info "#{Time.now} Simulando combinacao #{i}/#{counter_combs}"
 
 			#Arrays de saída
 			cashFlow = Array.new
 			participantesFlow = Array.new
 
 			#Hash com parametros do loop corrente	
-			h = Hash.new
-			c.each {|p| h.merge!(p)}
-			h.merge!(totais_ativos)
-      h.merge!(@p.nao_combinaveis)
+			h = @p.parametros[i]
+			
+			h = h.merge(totais_ativos)
+			
 
 			#Variáveis de acumulacao
 			receitas,despesas = 0,0
@@ -87,25 +87,27 @@ class Simulador
 			plano = PlanoPrevidencia.new(h)
 
 			#Loop ao longo de todo horizonte de simulacao
-			(0...@p.geral_horizonte).each do |i|
+			(0...h[:geral_horizonte]).each do |j|
 
-				@log.info "#{Time.now} Simulando ano #{i}/#{@p.geral_horizonte}"
+				@log.info "#{Time.now} Simulando ano #{j}/#{h[:geral_horizonte]}"
 
 				#Obtem resumo das quantidades de participantes
 				r = participantes_resumo(participantes)
 				@log.info "#{Time.now} Total atual de participantes: #{participantes.length}"
-        @log.info "#{Time.now} Total de participantes ativos:#{r[:ativos]}"
-        @log.info "#{Time.now} Total de participantes desligados:#{r[:desligados]}"
+				@log.info "#{Time.now} Total de participantes ativos:#{r[:ativos]}"
+				@log.info "#{Time.now} Total de participantes desligados:#{r[:desligados]}"
+				@log.info "#{Time.now} Total de participantes vivos:#{r[:vivos]}"
+				@log.info "#{Time.now} Total de participantes invalidos:#{r[:invalidos]}"
 
 				#Atualiza array de fluxo de participantes
 				fluxo_participantes_ano_corrente = r.merge!({:ano => @anosimulacao})
 				participantesFlow << fluxo_participantes_ano_corrente
 		
 				#Atualiza ano corrente da simulacao
-				@anosimulacao = @anoatual + i
+				@anosimulacao = @anoatual + j
 
 				#Receitas e despesas
-				@log.info "#{Time.now} Calculando receitas e despesas para ano #{i}/#{@p.geral_horizonte}"
+				@log.info "#{Time.now} Calculando receitas e despesas para ano #{j}/#{h[:geral_horizonte]}"
 				participantes.each do |p|				
 					receitas = receitas + plano.contribuicao_anual(p)
 					despesas = despesas + plano.beneficio_anual(p)
@@ -115,7 +117,7 @@ class Simulador
 				fluxo_ano_corrente = {:ano => @anosimulacao, :receitas => receitas,:despesas => despesas}
 				cashFlow << fluxo_ano_corrente
 
-				@log.info "#{Time.now} Iniciando processos de atualizacao dos participantes para #{i}/#{@p.geral_horizonte}"
+				@log.info "#{Time.now} Iniciando processos de atualizacao dos participantes para #{j}/#{h[:geral_horizonte]}"
 
 				#Processos de atualizacao da lista de participantes
 				participantes = patrocinador.processa_promocao_anual(participantes)
@@ -130,16 +132,15 @@ class Simulador
 				participantes = patrocinador.processa_contratacoes(participantes)
 				#participantes = patrocinador.processa_salarios(participantes)
 
-				@log.info "#{Time.now} Finalizando processos de atualizacao dos participantes #{i}/#{@p.geral_horizonte}"
+				@log.info "#{Time.now} Finalizando processos de atualizacao dos participantes #{j}/#{h[:geral_horizonte]}"
 
 			end
 
 			#Merge com parametros correntes e salva no banco de dados
 		 	h.merge!({:flows => cashFlow})
 			h.merge!(@sim_info)
-			@log.info "#{Time.now} Salvando resultados de simulacao para combinacao #{cur_comb}/#{counter_combs}"
+			@log.info "#{Time.now} Salvando resultados de simulacao para combinacao #{i}/#{counter_combs}"
 			Persistencia.salva("cashflows", h)
-			cur_comb = cur_comb + 1
 
 		end
 

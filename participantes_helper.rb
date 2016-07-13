@@ -31,16 +31,20 @@ module ParticipantesHelper
 	end
 
 	def participantes_vivos(participantes)
+		indexes = participantes_index(participantes,{:vivo=>true})	
 	end
 
 	def participantes_invalidos(participantes)
+		indexes = participantes_index(participantes,{:invalido=>true})
 	end
 
 
 	def participantes_resumo(participantes)
 		resumo = {
 			:ativos => participantes_ativos(participantes).length,	
-			:desligados => participantes_desligados(participantes).length
+			:desligados => participantes_desligados(participantes).length,
+			:vivos => participantes_vivos(participantes).length,
+			:invalidos => participantes_invalidos(participantes).length
 		}
 		return resumo
 	end
