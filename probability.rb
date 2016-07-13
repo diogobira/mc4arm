@@ -1,10 +1,7 @@
 module Probability
 
-		require 'rubygems'
-		require 'rsruby'
-    #require 'RSRuby'
-
-    @R = RSRuby.instance
+	require 'rubygems'
+	require 'rubystats'
 
 	######################################################
 	#Funções que geram amostras de uma dada distribuição
@@ -14,8 +11,15 @@ module Probability
 	def Probability.bernoulli(num_samples, params)
         p = params[0] || 0.5 #prob de sucesso (se não informado, usar 0.5)
         
-        #chama a função relacionada no R
-        @R.rbinom(num_samples, 1, p)
+        if num_samples == 1
+			return (rand < p ? 1 : 0)
+		else
+			vals = []
+			for i in (0 ...num_samples)
+				vals[i] = (rand < p ? 1 : 0)
+			end
+			return vals
+		end
 	end
 
     #Normal
@@ -23,8 +27,7 @@ module Probability
         mean = params[0] || 0 #média (se não informada, usar 0)
         std_dev = params[1] || 1 #desvio-padrão (se não informado, usar 1)
         
-        #chama a função relacionada no R
-        @R.rnorm(num_samples, mean, std_dev)
+		Rubystats::NormalDistribution.new(mean, std_dev).rng(num_samples)
 	end
 
     #Uniforme (contínua)
@@ -32,8 +35,16 @@ module Probability
         min = params[0] || 0 #mínimo (se não informado, usar 0)
         max = params[1] || 1 #máximo (se não informado, usar 1)
 
-        #chama a função relacionada no R
-        @R.runif(num_samples, min, max)
+        if num_samples == 1
+			return (rand * (max - min)) + min
+		else
+			vals = []
+			for i in (0 ...num_samples)
+				vals[i] = (rand * (max - min)) + min
+			end
+			return vals
+		end
+        
 	end
 
     #Uniforme (discreta)
@@ -47,7 +58,8 @@ module Probability
         elems = (min..max).step(delta).to_a
 
         #chama a função relacionada no R
-        @R.sample(elems, num_samples, true)
+		
+        num_samples.times.map{elems}.flatten.sample(num_samples)
     end
 
     #Array constante com referências para funções que implementam
